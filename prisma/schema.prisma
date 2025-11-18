@@ -1,0 +1,141 @@
+// schema.prisma
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  USER
+  MODERATOR
+  ADMIN
+}
+
+model User {
+  id           String     @id @default(uuid())
+  email        String     @unique
+  username     String     @unique
+  passwordHash String?
+  bio          String?
+  avatarUrl    String?
+  role         UserRole   @default(USER)
+  articles     Article[]  @relation("AuthorArticles")
+  comments     Comment[]
+  likes        Like[]
+  bookmarks    Bookmark[]
+  followers    Follow[]   @relation("Follower")
+  following    Follow[]   @relation("Following")
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+
+  @@index([username])
+  @@index([email])
+}
+
+model Article {
+  id          String       @id @default(uuid())
+  title       String
+  slug        String       @unique
+  body        String
+  description String?
+  coverImage  String?
+  published   Boolean      @default(false)
+  viewCount   Int          @default(0)
+  readingTime Int?         // in minutes
+  author      User         @relation("AuthorArticles", fields: [authorId], references: [id])
+  authorId    String
+  tags        ArticleTag[]
+  comments    Comment[]
+  likes       Like[]
+  bookmarks   Bookmark[]
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+
+  @@index([slug])
+  @@index([authorId])
+  @@index([published, createdAt])
+  @@index([published, updatedAt])
+  @@index([title])
+  @@index([description])
+}
+
+model Tag {
+  id        String       @id @default(uuid())
+  name      String       @unique
+  slug      String       @unique
+  articles  ArticleTag[]
+  createdAt DateTime     @default(now())
+
+  @@index([slug])
+  @@index([name])
+}
+
+model ArticleTag {
+  article   Article @relation(fields: [articleId], references: [id])
+  articleId String
+  tag       Tag     @relation(fields: [tagId], references: [id])
+  tagId     String
+
+  @@id([articleId, tagId])
+}
+
+model Comment {
+  id        String    @id @default(uuid())
+  body      String
+  article   Article   @relation(fields: [articleId], references: [id], onDelete: Cascade)
+  articleId String
+  author    User      @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  authorId  String
+  parentId  String?
+  parent    Comment?  @relation("CommentReplies", fields: [parentId], references: [id], onDelete: Cascade)
+  replies   Comment[] @relation("CommentReplies")
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  @@index([articleId])
+  @@index([authorId])
+  @@index([parentId])
+}
+
+model Like {
+  id        String   @id @default(uuid())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String
+  article   Article  @relation(fields: [articleId], references: [id], onDelete: Cascade)
+  articleId String
+  createdAt DateTime @default(now())
+
+  @@unique([userId, articleId])
+  @@index([articleId])
+  @@index([userId])
+}
+
+model Bookmark {
+  id        String   @id @default(uuid())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String
+  article   Article  @relation(fields: [articleId], references: [id], onDelete: Cascade)
+  articleId String
+  createdAt DateTime @default(now())
+
+  @@unique([userId, articleId])
+  @@index([userId])
+  @@index([articleId])
+}
+
+model Follow {
+  id          String   @id @default(uuid())
+  follower    User     @relation("Follower", fields: [followerId], references: [id], onDelete: Cascade)
+  followerId  String
+  following   User     @relation("Following", fields: [followingId], references: [id], onDelete: Cascade)
+  followingId String
+  createdAt   DateTime @default(now())
+
+  @@unique([followerId, followingId])
+  @@index([followerId])
+  @@index([followingId])
+}

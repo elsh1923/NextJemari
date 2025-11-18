@@ -1,0 +1,64 @@
+@import "tailwindcss";
+
+:root {
+  --background: #f8fafc;
+  --foreground: #0f172a;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0c;
+    --foreground: #f8fafc;
+  }
+}
+
+* {
+  @apply border-slate-200 dark:border-[#1A1A1C];
+}
+
+body {
+  @apply bg-slate-50 text-slate-900 antialiased dark:bg-[#0A0A0C] dark:text-slate-100;
+  font-family: var(--font-geist-sans), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+/* Custom utilities */
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.line-clamp-3 {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Smooth transitions */
+* {
+  @apply transition-colors duration-200;
+}
+
+/* Code blocks */
+code {
+  @apply rounded bg-slate-100 px-1.5 py-0.5 text-sm font-mono text-slate-800 dark:bg-[#1A1A1C] dark:text-slate-200;
+  font-family: var(--font-geist-mono), "JetBrains Mono", "Fira Code", monospace;
+}
+
+pre {
+  @apply overflow-x-auto rounded-lg bg-slate-900 p-4 text-sm dark:bg-[#0A0A0C];
+  font-family: var(--font-geist-mono), "JetBrains Mono", "Fira Code", monospace;
+}
+
+pre code {
+  @apply bg-transparent p-0 text-slate-100 dark:text-slate-200;
+}
