@@ -12,14 +12,14 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       <button
         ref={ref}
         className={clsx(
-          "inline-flex items-center justify-center rounded-lg font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none",
+          "inline-flex items-center justify-center rounded-lg font-medium transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none hover:scale-105 active:scale-95",
           {
             // Variants
-            "bg-slate-900 text-white hover:bg-slate-800 focus:ring-slate-900 dark:bg-white dark:text-slate-900 dark:hover:bg-slate-100":
+            "bg-slate-900 text-white hover:bg-slate-800 hover:shadow-lg focus:ring-slate-900 dark:bg-white dark:text-slate-900 dark:hover:bg-slate-100":
               variant === "default",
-            "border border-slate-200 bg-white text-slate-700 hover:bg-slate-50 focus:ring-slate-900 dark:border-[#1A1A1C] dark:bg-[#111113] dark:text-slate-300 dark:hover:bg-[#1A1A1C]":
+            "border border-slate-200 bg-white text-slate-700 hover:bg-slate-50 hover:border-blue-300 hover:shadow-md focus:ring-slate-900 dark:border-[#1A1A1C] dark:bg-[#111113] dark:text-slate-300 dark:hover:bg-[#1A1A1C] dark:hover:border-blue-500/50":
               variant === "outline",
-            "text-slate-700 hover:bg-slate-100 focus:ring-slate-900 dark:text-slate-300 dark:hover:bg-[#1A1A1C]":
+            "text-slate-700 hover:bg-slate-100 hover:text-slate-900 focus:ring-slate-900 dark:text-slate-300 dark:hover:bg-[#1A1A1C] dark:hover:text-white":
               variant === "ghost",
             // Sizes
             "h-8 px-3 text-xs": size === "sm",
