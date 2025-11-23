@@ -4,17 +4,19 @@ import { ArticleList } from "@/components/articles/ArticleList";
 export const dynamic = 'force-dynamic';
 
 interface PageProps {
-  searchParams: {
+  searchParams: Promise<{
     page?: string;
     sortBy?: string;
     tag?: string;
-  };
+  }>;
 }
 
 export default async function ArticlesPage({ searchParams }: PageProps) {
-  const page = parseInt(searchParams.page || "1");
-  const sortBy = (searchParams.sortBy as any) || "newest";
-  const tagSlug = searchParams.tag;
+  // Handle searchParams - can be Promise in Next.js 15+ or object in older versions
+  const resolvedParams = searchParams instanceof Promise ? await searchParams : searchParams;
+  const page = parseInt(resolvedParams.page || "1");
+  const sortBy = (resolvedParams.sortBy as any) || "newest";
+  const tagSlug = resolvedParams.tag;
 
   const { articles, total, totalPages } = await getArticles({
     published: true,

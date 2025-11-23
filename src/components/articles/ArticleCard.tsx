@@ -3,12 +3,14 @@ import Image from "next/image";
 import { Calendar, Clock, Heart, MessageCircle, User } from "lucide-react";
 import { ArticleListItem } from "@/types";
 import { formatRelativeTime } from "@/lib/utils";
+import { DeleteArticleButton } from "@/components/articles/DeleteArticleButton";
 
 interface ArticleCardProps {
   article: ArticleListItem;
+  showDeleteButton?: boolean;
 }
 
-export function ArticleCard({ article }: ArticleCardProps) {
+export function ArticleCard({ article, showDeleteButton = false }: ArticleCardProps) {
   return (
     <Link
       href={`/u/${article.author.username}/${article.slug}`}

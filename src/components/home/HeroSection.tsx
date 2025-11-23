@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Calendar, Clock, User, Sparkles } from "lucide-react";
+import { Calendar, Clock, User, Sparkles, Github } from "lucide-react";
 import { ArticleListItem } from "@/types";
 import { formatRelativeTime } from "@/lib/utils";
 
@@ -24,14 +24,27 @@ export function HeroSection({ articles }: HeroSectionProps) {
             Featured Articles
           </h2>
         </div>
-        <Link
-          href="/articles"
-          className="group/arrow flex items-center gap-1 text-sm font-medium text-blue-600 transition-all duration-300 hover:text-blue-700 hover:translate-x-1 dark:text-blue-400 dark:hover:text-blue-300"
-        >
-          <span>View all</span>
-          <span className="transition-transform duration-300 group-hover/arrow:translate-x-1">→</span>
-        </Link>
+        <div className="flex items-center gap-4">
+          {/* GitHub Link */}
+          <a
+            href="https://github.com/elsh1923/NextJemari"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="group/github flex items-center gap-1 text-sm font-medium text-slate-600 transition-all duration-300 hover:text-slate-900 hover:scale-105 dark:text-slate-400 dark:hover:text-slate-200"
+          >
+            <Github className="h-4 w-4" />
+            <span>View on GitHub</span>
+          </a>
+          <Link
+            href="/articles"
+            className="group/arrow flex items-center gap-1 text-sm font-medium text-blue-600 transition-all duration-300 hover:text-blue-700 hover:translate-x-1 dark:text-blue-400 dark:hover:text-blue-300"
+          >
+            <span>View all</span>
+            <span className="transition-transform duration-300 group-hover/arrow:translate-x-1">→</span>
+          </Link>
+        </div>
       </div>
+
 
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {articles.slice(0, 3).map((article, index) => (

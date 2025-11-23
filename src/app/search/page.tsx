@@ -6,19 +6,21 @@ import { SearchFilters } from "@/components/search/SearchFilters";
 export const dynamic = 'force-dynamic';
 
 interface PageProps {
-  searchParams: {
+  searchParams: Promise<{
     q?: string;
     tags?: string;
     sortBy?: string;
     page?: string;
-  };
+  }>;
 }
 
 export default async function SearchPage({ searchParams }: PageProps) {
-  const query = searchParams.q || "";
-  const tags = searchParams.tags?.split(",").filter(Boolean);
-  const sortBy = (searchParams.sortBy as any) || "newest";
-  const page = parseInt(searchParams.page || "1");
+  // Handle searchParams - can be Promise in Next.js 15+ or object in older versions
+  const resolvedParams = searchParams instanceof Promise ? await searchParams : searchParams;
+  const query = resolvedParams.q || "";
+  const tags = resolvedParams.tags?.split(",").filter(Boolean);
+  const sortBy = (resolvedParams.sortBy as any) || "newest";
+  const page = parseInt(resolvedParams.page || "1");
 
   const results = await searchArticles({
     query,

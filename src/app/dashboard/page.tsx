@@ -4,6 +4,7 @@ import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { getUserArticlesById } from "@/actions/articles";
 import { getBookmarkedArticles } from "@/actions/bookmarks";
 import { getCurrentUserProfile } from "@/actions/users";
+import { getFollowers, getFollowing, getFollowerCount, getFollowingCount } from "@/actions/follows";
 import { DashboardView } from "@/components/dashboard/DashboardView";
 import { cookies } from "next/headers";
 
@@ -31,10 +32,14 @@ export default async function DashboardPage() {
     redirect("/auth/signin");
   }
 
-  const [articles, bookmarks, profile] = await Promise.all([
+  const [articles, bookmarks, profile, followers, following, followerCount, followingCount] = await Promise.all([
     getUserArticlesById(session.user.id, true).catch(() => []),
     getBookmarkedArticles().catch(() => []),
     getCurrentUserProfile().catch(() => null),
+    getFollowers(session.user.id).catch(() => []),
+    getFollowing(session.user.id).catch(() => []),
+    getFollowerCount(session.user.id).catch(() => 0),
+    getFollowingCount(session.user.id).catch(() => 0),
   ]);
 
   return (
@@ -47,6 +52,10 @@ export default async function DashboardPage() {
           articles={articles}
           bookmarks={bookmarks}
           profile={profile}
+          followers={followers}
+          following={following}
+          followerCount={followerCount}
+          followingCount={followingCount}
         />
       </div>
     </div>

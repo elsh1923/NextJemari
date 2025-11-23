@@ -5,6 +5,7 @@ import { getArticleBySlug } from "@/actions/articles";
 import { getArticleComments } from "@/actions/comments";
 import { hasLiked } from "@/actions/likes";
 import { hasBookmarked } from "@/actions/bookmarks";
+import { isFollowing } from "@/actions/follows";
 import { ArticleView } from "@/components/articles/ArticleView";
 import { CommentSection } from "@/components/comments/CommentSection";
 import { RelatedArticles } from "@/components/articles/RelatedArticles";
@@ -52,11 +53,12 @@ export default async function ArticlePage({ params }: PageProps) {
     }
   }
   
-  // Check if user has liked/bookmarked (only if logged in)
-  const [comments, userLiked, userBookmarked] = await Promise.all([
+  // Check if user has liked/bookmarked/followed (only if logged in)
+  const [comments, userLiked, userBookmarked, userFollowing] = await Promise.all([
     getArticleComments(article.id).catch(() => []),
     session?.user?.id ? hasLiked(article.id).catch(() => false) : Promise.resolve(false),
     session?.user?.id ? hasBookmarked(article.id).catch(() => false) : Promise.resolve(false),
+    session?.user?.id && article.author.id !== session.user.id ? isFollowing(article.author.id).catch(() => false) : Promise.resolve(false),
   ]);
 
   return (
@@ -66,6 +68,8 @@ export default async function ArticlePage({ params }: PageProps) {
           article={article} 
           initialLiked={userLiked}
           initialBookmarked={userBookmarked}
+          currentUserId={session?.user?.id}
+          initialFollowing={userFollowing}
         />
         <CommentSection articleId={article.id} initialComments={comments} />
         <RelatedArticles currentArticleId={article.id} tags={article.tags.map(t => t.tag.slug)} />

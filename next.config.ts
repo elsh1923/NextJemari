@@ -7,6 +7,16 @@ const nextConfig: NextConfig = {
   },
   // Turbopack config (Next.js 16 default)
   turbopack: {},
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "res.cloudinary.com",
+        port: "",
+        pathname: "/**",
+      },
+    ],
+  },
 };
 
 export default nextConfig;

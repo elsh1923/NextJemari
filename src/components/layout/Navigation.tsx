@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Search, Menu, X } from "lucide-react";
+import { Search, Menu, X, Github } from "lucide-react";
 import { useState } from "react";
 import { useSession, signIn, signOut } from "next-auth/react";
 import { Button } from "@/components/ui/Button";
@@ -47,6 +47,14 @@ export function Navigation() {
             >
               Tags
             </Link>
+            <a
+              href="https://github.com/elsh1923/NextJemari"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="relative text-sm font-medium text-slate-600 transition-all duration-300 hover:text-slate-900 hover:scale-110 dark:text-slate-400 dark:hover:text-slate-100"
+            >
+              <Github className="h-5 w-5" />
+            </a>
           </div>
 
           {/* Search Bar - Desktop */}
@@ -94,9 +102,11 @@ export function Navigation() {
                 <Button variant="ghost" size="sm" onClick={() => signIn()}>
                   Sign In
                 </Button>
-                <Button size="sm" onClick={() => signIn()}>
-                  Get Started
-                </Button>
+                <Link href="/auth/signup">
+                  <Button size="sm">
+                    Get Started
+                  </Button>
+                </Link>
               </>
             )}
           </div>
@@ -161,6 +171,16 @@ export function Navigation() {
               >
                 Tags
               </Link>
+              <a
+                href="https://github.com/elsh1923/NextJemari"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-2 text-sm font-medium text-slate-600 dark:text-slate-400"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                <Github className="h-4 w-4" />
+                <span>GitHub</span>
+              </a>
               {session ? (
                 <>
                   <Link
@@ -198,15 +218,13 @@ export function Navigation() {
                   >
                     Sign In
                   </button>
-                  <button
-                    onClick={() => {
-                      signIn();
-                      setMobileMenuOpen(false);
-                    }}
+                  <Link
+                    href="/auth/signup"
                     className="block text-sm font-medium text-slate-600 dark:text-slate-400"
+                    onClick={() => setMobileMenuOpen(false)}
                   >
                     Get Started
-                  </button>
+                  </Link>
                 </>
               )}
             </div>

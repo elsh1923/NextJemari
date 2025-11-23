@@ -6,19 +6,32 @@ import { SessionUser } from "@/types";
 import { ArticleListItem } from "@/types";
 import { Button } from "@/components/ui/Button";
 import { ArticleList } from "@/components/articles/ArticleList";
-import { Plus, FileText, Bookmark, Settings } from "lucide-react";
+import { Plus, FileText, Bookmark, Settings, Users } from "lucide-react";
 import { ProfileEditForm } from "@/components/users/ProfileEditForm";
 import { UserProfile } from "@/types";
+import { UserList } from "@/components/users/UserList";
+
+interface UserListItem {
+  id: string;
+  username: string;
+  avatarUrl: string | null;
+  bio: string | null;
+}
 
 interface DashboardViewProps {
   user: SessionUser;
   articles: ArticleListItem[];
   bookmarks: ArticleListItem[];
   profile?: UserProfile | null;
+  followers?: UserListItem[];
+  following?: UserListItem[];
+  followerCount?: number;
+  followingCount?: number;
 }
 
-export function DashboardView({ user, articles, bookmarks, profile }: DashboardViewProps) {
-  const [activeTab, setActiveTab] = useState<"articles" | "bookmarks" | "settings">("articles");
+export function DashboardView({ user, articles, bookmarks, profile, followers = [], following = [], followerCount = 0, followingCount = 0 }: DashboardViewProps) {
+  const [activeTab, setActiveTab] = useState<"articles" | "bookmarks" | "social" | "settings">("articles");
+  const [socialView, setSocialView] = useState<"followers" | "following">("followers");
 
   return (
     <div>
@@ -66,6 +79,19 @@ export function DashboardView({ user, articles, bookmarks, profile }: DashboardV
             </div>
           </button>
           <button
+            onClick={() => setActiveTab("social")}
+            className={`border-b-2 py-4 text-sm font-medium transition-all duration-300 ${
+              activeTab === "social"
+                ? "border-blue-500 text-blue-600 dark:text-blue-400"
+                : "border-transparent text-slate-500 hover:border-slate-300 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-300"
+            }`}
+          >
+            <div className="flex items-center space-x-2">
+              <Users className="h-4 w-4 transition-transform duration-300 group-hover:scale-110" />
+              <span>Social</span>
+            </div>
+          </button>
+          <button
             onClick={() => setActiveTab("settings")}
             className={`border-b-2 py-4 text-sm font-medium transition-all duration-300 ${
               activeTab === "settings"
@@ -84,7 +110,7 @@ export function DashboardView({ user, articles, bookmarks, profile }: DashboardV
       <div>
         {activeTab === "articles" ? (
           articles.length > 0 ? (
-            <ArticleList articles={articles} />
+            <ArticleList articles={articles} showDeleteButton={true} />
           ) : (
             <div className="rounded-xl border border-slate-200 bg-white p-12 text-center dark:border-[#1A1A1C] dark:bg-[#111113]">
               <FileText className="mx-auto h-12 w-12 text-slate-400" />
@@ -113,6 +139,53 @@ export function DashboardView({ user, articles, bookmarks, profile }: DashboardV
               </p>
             </div>
           )
+        ) : activeTab === "social" ? (
+          <div className="animate-[fade-in_0.5s_ease-out] space-y-6">
+            <div className="rounded-xl border border-slate-200 bg-white p-6 dark:border-[#1A1A1C] dark:bg-[#111113]">
+              <div className="mb-6 flex items-center justify-between">
+                <h2 className="text-2xl font-semibold text-slate-900 dark:text-white">
+                  Social
+                </h2>
+                <div className="flex gap-2 text-sm">
+                  <div className="rounded-lg bg-blue-50 px-4 py-2 dark:bg-blue-900/20">
+                    <span className="font-semibold text-blue-600 dark:text-blue-400">{followerCount}</span>
+                    <span className="ml-1 text-slate-600 dark:text-slate-400">Followers</span>
+                  </div>
+                  <div className="rounded-lg bg-blue-50 px-4 py-2 dark:bg-blue-900/20">
+                    <span className="font-semibold text-blue-600 dark:text-blue-400">{followingCount}</span>
+                    <span className="ml-1 text-slate-600 dark:text-slate-400">Following</span>
+                  </div>
+                </div>
+              </div>
+              <div className="mb-4 flex gap-4 border-b border-slate-200 dark:border-[#1A1A1C]">
+                <button
+                  onClick={() => setSocialView("followers")}
+                  className={`border-b-2 pb-2 text-sm font-medium transition-all ${
+                    socialView === "followers"
+                      ? "border-blue-500 text-blue-600 dark:text-blue-400"
+                      : "border-transparent text-slate-500 hover:text-slate-700 dark:text-slate-400"
+                  }`}
+                >
+                  Followers ({followerCount})
+                </button>
+                <button
+                  onClick={() => setSocialView("following")}
+                  className={`border-b-2 pb-2 text-sm font-medium transition-all ${
+                    socialView === "following"
+                      ? "border-blue-500 text-blue-600 dark:text-blue-400"
+                      : "border-transparent text-slate-500 hover:text-slate-700 dark:text-slate-400"
+                  }`}
+                >
+                  Following ({followingCount})
+                </button>
+              </div>
+              {socialView === "followers" ? (
+                <UserList users={followers} currentUserId={user.id} showFollowButton={false} />
+              ) : (
+                <UserList users={following} currentUserId={user.id} showFollowButton={true} />
+              )}
+            </div>
+          </div>
         ) : activeTab === "settings" ? (
           <div className="animate-[fade-in_0.5s_ease-out] rounded-xl border border-slate-200 bg-white p-6 dark:border-[#1A1A1C] dark:bg-[#111113] sm:p-8">
             <h2 className="mb-6 text-2xl font-semibold text-slate-900 dark:text-white">

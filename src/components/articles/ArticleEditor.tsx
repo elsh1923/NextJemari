@@ -14,18 +14,20 @@ interface ArticleEditorProps {
 export function ArticleEditor({ article }: ArticleEditorProps) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState(false);
   const [formData, setFormData] = useState({
     title: article?.title || "",
     description: article?.description || "",
     body: article?.body || "",
     coverImage: article?.coverImage || "",
     tagNames: article?.tags.map((t) => t.tag.name).join(", ") || "",
-    published: article?.published || false,
+    published: article?.published ?? true,
   });
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
+    setSuccess(false);
 
     try {
       const tagNames = formData.tagNames
@@ -39,18 +41,24 @@ export function ArticleEditor({ article }: ArticleEditorProps) {
           ...formData,
           tagNames,
         });
-        router.push(`/u/${article.author.username}/${article.slug}`);
+        setSuccess(true);
+        setTimeout(() => {
+          router.push(`/u/${article.author.username}/${article.slug}`);
+          router.refresh();
+        }, 1500);
       } else {
         const newArticle = await createArticle({
           ...formData,
           tagNames,
         });
-        router.push(`/u/${newArticle.author.username}/${newArticle.slug}`);
+        setSuccess(true);
+        setTimeout(() => {
+          router.push(`/u/${newArticle.author.username}/${newArticle.slug}`);
+          router.refresh();
+        }, 1500);
       }
-      router.refresh();
     } catch (error: any) {
       alert(error.message || "Failed to save article");
-    } finally {
       setLoading(false);
     }
   };
@@ -62,6 +70,14 @@ export function ArticleEditor({ article }: ArticleEditorProps) {
           {article ? "Edit Article" : "Write New Article"}
         </h1>
       </div>
+
+      {success && (
+        <div className="mx-6 mb-4 rounded-lg bg-green-50 p-4 text-green-800 dark:bg-green-950/30 dark:text-green-400">
+          <p className="font-medium">
+            ✓ {article ? "Article updated" : "Article published"} successfully! Redirecting...
+          </p>
+        </div>
+      )}
 
       <form onSubmit={handleSubmit} className="p-6 sm:p-8">
         <div className="space-y-6">
@@ -139,9 +155,7 @@ export function ArticleEditor({ article }: ArticleEditorProps) {
               onChange={(e) => setFormData({ ...formData, body: e.target.value })}
               rows={20}
               className="mt-1 block w-full rounded-lg border border-slate-300 bg-white px-3 py-2 font-mono text-sm text-slate-900 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:border-[#1A1A1C] dark:bg-[#0A0A0C] dark:text-white"
-              placeholder="# Your Article Title
-
-Write your article content here using Markdown/MDX..."
+              placeholder="# Your Article Title\n\nWrite your article content here using Markdown/MDX..."
             />
           </div>
 
@@ -168,7 +182,14 @@ Write your article content here using Markdown/MDX..."
               Cancel
             </Button>
             <Button type="submit" disabled={loading}>
-              {loading ? "Saving..." : article ? "Update Article" : "Publish Article"}
+              {loading 
+                ? "Saving..." 
+                : article 
+                  ? "Update Article" 
+                  : formData.published 
+                    ? "Publish Article" 
+                    : "Save Draft"
+              }
             </Button>
           </div>
         </div>

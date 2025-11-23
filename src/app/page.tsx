@@ -1,6 +1,5 @@
 import { getArticles } from "@/actions/articles";
 import { getPopularTags } from "@/actions/tags";
-import { Navigation } from "@/components/layout/Navigation";
 import { HeroSection } from "@/components/home/HeroSection";
 import { ArticleFeed } from "@/components/home/ArticleFeed";
 import { Sidebar } from "@/components/home/Sidebar";
@@ -29,8 +28,6 @@ export default async function HomePage() {
     <div className="min-h-screen bg-slate-50 dark:bg-[#0A0A0C] relative overflow-hidden">
       {/* Animated background gradient */}
       <div className="absolute inset-0 bg-gradient-to-br from-blue-50/50 via-transparent to-indigo-50/50 dark:from-blue-950/20 dark:via-transparent dark:to-indigo-950/20 bg-[length:200%_200%] animate-[gradient_3s_ease_infinite] pointer-events-none" />
-      
-      <Navigation />
       
       <main className="relative mx-auto max-w-7xl px-4 py-6 sm:px-6 sm:py-8 lg:px-8">
         {/* Hero Section with Featured Articles */}

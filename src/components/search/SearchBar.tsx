@@ -15,14 +15,18 @@ function SearchBarContent({ initialQuery = "" }: SearchBarProps) {
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
+    const trimmedQuery = query.trim();
     const params = new URLSearchParams(searchParams.toString());
-    if (query.trim()) {
-      params.set("q", query.trim());
+
+    if (trimmedQuery) {
+      params.set("q", trimmedQuery);
+      params.delete("page"); // Reset to page 1
+      router.push(`/search?${params.toString()}`);
     } else {
       params.delete("q");
+      params.delete("page");
+      router.push(`/search?${params.toString()}`);
     }
-    params.delete("page"); // Reset to page 1
-    router.push(`/search?${params.toString()}`);
   };
 
   return (

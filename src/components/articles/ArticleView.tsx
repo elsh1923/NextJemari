@@ -5,15 +5,21 @@ import { ArticleWithRelations } from "@/types";
 import { formatRelativeTime } from "@/lib/utils";
 import { LikeButton } from "@/components/articles/LikeButton";
 import { BookmarkButton } from "@/components/articles/BookmarkButton";
+import { DeleteArticleButton } from "@/components/articles/DeleteArticleButton";
+import { FollowButton } from "@/components/users/FollowButton";
 import { MDXContent } from "@/components/mdx/MDXContent";
 
 interface ArticleViewProps {
   article: ArticleWithRelations;
   initialLiked?: boolean;
   initialBookmarked?: boolean;
+  currentUserId?: string;
+  initialFollowing?: boolean;
 }
 
-export function ArticleView({ article, initialLiked = false, initialBookmarked = false }: ArticleViewProps) {
+export function ArticleView({ article, initialLiked = false, initialBookmarked = false, currentUserId, initialFollowing = false }: ArticleViewProps) {
+  const isAuthor = currentUserId === article.author.id;
+  const canFollow = currentUserId && !isAuthor;
   return (
     <article className="rounded-xl border border-slate-200 bg-white dark:border-[#1A1A1C] dark:bg-[#111113]">
       {/* Header */}
@@ -83,6 +89,8 @@ export function ArticleView({ article, initialLiked = false, initialBookmarked =
             </Link>
           </div>
 
+
+
           <div className="flex items-center space-x-2 sm:space-x-3">
             <LikeButton 
               articleId={article.id} 
@@ -98,6 +106,18 @@ export function ArticleView({ article, initialLiked = false, initialBookmarked =
                 <MessageCircle className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
                 <span>{article._count.comments}</span>
               </div>
+            )}
+            {canFollow && (
+              <FollowButton 
+                userId={article.author.id}
+                initialFollowing={initialFollowing}
+              />
+            )}
+            {isAuthor && (
+              <DeleteArticleButton 
+                slug={article.slug}
+                authorUsername={article.author.username}
+              />
             )}
           </div>
         </div>

@@ -48,7 +48,7 @@ export async function searchArticles(
   }
 
   // Full-text search
-  if (validated.query && validated.query.trim()) {
+  if (validated.query && validated.query.trim().length > 0) {
     const searchQuery = validated.query.trim();
     where.OR = [
       {

@@ -248,9 +248,29 @@ export async function deleteArticle(slug: string): Promise<void> {
     throw new ForbiddenError("You don't have permission to delete this article");
   }
 
-  await prisma.article.delete({
-    where: { slug },
-  });
+  // Delete all related records in a transaction to avoid foreign key constraint violations
+  await prisma.$transaction([
+    // Delete article tags
+    prisma.articleTag.deleteMany({
+      where: { articleId: article.id },
+    }),
+    // Delete comments
+    prisma.comment.deleteMany({
+      where: { articleId: article.id },
+    }),
+    // Delete likes
+    prisma.like.deleteMany({
+      where: { articleId: article.id },
+    }),
+    // Delete bookmarks
+    prisma.bookmark.deleteMany({
+      where: { articleId: article.id },
+    }),
+    // Finally delete the article
+    prisma.article.delete({
+      where: { slug },
+    }),
+  ]);
 }
 
 /**
