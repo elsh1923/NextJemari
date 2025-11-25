@@ -557,3 +557,67 @@ export async function getUserArticles(
   }
 }
 
+/**
+ * Publish a draft article
+ */
+export async function publishArticle(slug: string): Promise<ArticleWithRelations> {
+  const user = await requireAuth();
+
+  // Find the article
+  const article = await prisma.article.findUnique({
+    where: { slug },
+  });
+
+  if (!article) {
+    throw new NotFoundError("Article");
+  }
+
+  // Check permissions
+  const canEditArticle = await canEdit(user.id, article.authorId);
+  if (!canEditArticle) {
+    throw new ForbiddenError("You don't have permission to publish this article");
+  }
+
+  // Check if already published
+  if (article.published) {
+    throw new ValidationError("Article is already published");
+  }
+
+  // Update article to published
+  const updatedArticle = await prisma.article.update({
+    where: { slug },
+    data: { published: true },
+    include: {
+      author: {
+        select: {
+          id: true,
+          username: true,
+          avatarUrl: true,
+        },
+      },
+      tags: {
+        include: {
+          tag: true,
+        },
+      },
+      comments: {
+        include: {
+          author: {
+            select: {
+              id: true,
+              username: true,
+              avatarUrl: true,
+            },
+          },
+        },
+        orderBy: {
+          createdAt: "asc",
+        },
+      },
+      likes: true,
+      bookmarks: true,
+    },
+  });
+
+  return updatedArticle as ArticleWithRelations;
+}

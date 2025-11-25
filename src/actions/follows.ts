@@ -61,7 +61,7 @@ export async function toggleFollow(followingId: string): Promise<{
       where: { followingId },
     }),
     prisma.follow.count({
-      where: { followerId: followingId },
+      where: { followerId: user.id },
     }),
   ]);
 

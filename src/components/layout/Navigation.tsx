@@ -60,6 +60,18 @@ export function Navigation() {
             </a>
           </div>
 
+          {/* Search Button - Always Visible */}
+          <div className="flex items-center">
+            <Link
+              href="/search"
+              className="group flex items-center space-x-2 rounded-lg bg-slate-100 px-3 py-2 text-sm font-medium text-slate-700 transition-all duration-300 hover:bg-slate-200 hover:scale-105 hover:shadow-md dark:bg-[#1A1A1C] dark:text-slate-300 dark:hover:bg-[#2A2A2C]"
+              title="Search articles"
+            >
+              <Search className="h-4 w-4 transition-transform duration-300 group-hover:scale-110" />
+              <span className="hidden sm:inline">Search</span>
+            </Link>
+          </div>
+
           {/* Search Bar - Desktop */}
           <div className="hidden flex-1 items-center justify-center px-4 lg:flex lg:px-8">
             <form
@@ -121,16 +133,25 @@ export function Navigation() {
           </div>
 
           {/* Mobile Menu Button */}
-          <button
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="md:hidden"
-          >
-            {mobileMenuOpen ? (
-              <X className="h-6 w-6 text-slate-900 dark:text-white" />
-            ) : (
-              <Menu className="h-6 w-6 text-slate-900 dark:text-white" />
-            )}
-          </button>
+          <div className="flex items-center space-x-3 md:hidden">
+            <Link
+              href="/search"
+              className="group flex items-center justify-center rounded-lg bg-slate-100 p-2 transition-all duration-300 hover:bg-slate-200 hover:scale-110 dark:bg-[#1A1A1C] dark:hover:bg-[#2A2A2C]"
+              title="Search"
+            >
+              <Search className="h-5 w-5 text-slate-700 transition-transform duration-300 group-hover:scale-110 dark:text-slate-300" />
+            </Link>
+            <button
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              className="rounded-lg p-2 transition-colors hover:bg-slate-100 dark:hover:bg-[#1A1A1C]"
+            >
+              {mobileMenuOpen ? (
+                <X className="h-6 w-6 text-slate-900 dark:text-white" />
+              ) : (
+                <Menu className="h-6 w-6 text-slate-900 dark:text-white" />
+              )}
+            </button>
+          </div>
         </div>
 
         {/* Mobile Menu */}

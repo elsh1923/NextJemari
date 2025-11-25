@@ -173,7 +173,7 @@ export function DashboardView({ user, articles, bookmarks, profile, followers = 
           )
         ) : activeTab === "drafts" ? (
           draftArticles.length > 0 ? (
-            <ArticleList articles={draftArticles} showDeleteButton={true} />
+            <ArticleList articles={draftArticles} showDeleteButton={true} showPublishButton={true} />
           ) : (
             <div className="rounded-xl border border-slate-200 bg-white p-12 text-center dark:border-[#1A1A1C] dark:bg-[#111113]">
               <FileText className="mx-auto h-12 w-12 text-slate-400" />

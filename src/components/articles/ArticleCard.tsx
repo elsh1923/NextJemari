@@ -4,13 +4,15 @@ import { Calendar, Clock, Heart, MessageCircle, User } from "lucide-react";
 import { ArticleListItem } from "@/types";
 import { formatRelativeTime } from "@/lib/utils";
 import { DeleteArticleButton } from "@/components/articles/DeleteArticleButton";
+import { PublishArticleButton } from "@/components/articles/PublishArticleButton";
 
 interface ArticleCardProps {
   article: ArticleListItem;
   showDeleteButton?: boolean;
+  showPublishButton?: boolean;
 }
 
-export function ArticleCard({ article, showDeleteButton = false }: ArticleCardProps) {
+export function ArticleCard({ article, showDeleteButton = false, showPublishButton = false }: ArticleCardProps) {
   return (
     <Link
       href={`/u/${article.author.username}/${article.slug}`}
@@ -84,6 +86,13 @@ export function ArticleCard({ article, showDeleteButton = false }: ArticleCardPr
                   </div>
                 </div>
               </div>
+
+              {/* Publish button for drafts */}
+              {showPublishButton && !article.published && (
+                <div className="mt-4" onClick={(e) => e.stopPropagation()}>
+                  <PublishArticleButton slug={article.slug} />
+                </div>
+              )}
             </div>
 
             {/* Cover Image */}

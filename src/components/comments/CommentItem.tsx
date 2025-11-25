@@ -111,8 +111,8 @@ export function CommentItem({ comment, depth = 0 }: CommentItemProps) {
             </div>
           )}
 
-          {replies.length > 0 && (
-            <div className={`mt-4 space-y-4 ${depth < maxDepth ? 'border-l-2 border-slate-200 pl-4 dark:border-[#1A1A1C]' : ''}`}>
+          {replies.length > 0 && depth < maxDepth && (
+            <div className="mt-4 space-y-4 border-l-2 border-slate-200 pl-4 dark:border-[#1A1A1C]">
               {replies.map((reply) => (
                 <CommentItem key={reply.id} comment={reply} depth={depth + 1} />
               ))}
