@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
-import { Calendar, Clock, Heart, MessageCircle, Bookmark, User, Edit } from "lucide-react";
+import { Calendar, Clock, Heart, MessageCircle, Bookmark, User } from "lucide-react";
 import { ArticleWithRelations } from "@/types";
 import { formatRelativeTime } from "@/lib/utils";
 import { LikeButton } from "@/components/articles/LikeButton";
@@ -8,6 +8,7 @@ import { BookmarkButton } from "@/components/articles/BookmarkButton";
 import { DeleteArticleButton } from "@/components/articles/DeleteArticleButton";
 import { FollowButton } from "@/components/users/FollowButton";
 import { MDXContent } from "@/components/mdx/MDXContent";
+import { ReportButton } from "@/components/articles/ReportButton";
 
 interface ArticleViewProps {
   article: ArticleWithRelations;
@@ -118,6 +119,9 @@ export function ArticleView({ article, initialLiked = false, initialBookmarked =
                 slug={article.slug}
                 authorUsername={article.author.username}
               />
+            )}
+            {!isAuthor && (
+              <ReportButton articleId={article.id} />
             )}
           </div>
         </div>

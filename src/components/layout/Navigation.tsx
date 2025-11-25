@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Search, Menu, X, Github } from "lucide-react";
+import { Search, Menu, X, Github, Home, FileText, Hash, User } from "lucide-react";
 import { useState } from "react";
 import { useSession, signIn, signOut } from "next-auth/react";
 import { Button } from "@/components/ui/Button";
@@ -31,29 +31,32 @@ export function Navigation() {
           <div className="hidden items-center space-x-8 md:flex md:ml-16">
             <Link
               href="/"
-              className="relative text-sm font-medium text-slate-600 transition-all duration-300 hover:text-slate-900 hover:scale-110 dark:text-slate-400 dark:hover:text-slate-100 after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 after:bg-blue-500 after:transition-all after:duration-300 hover:after:w-full"
+              className="group flex items-center space-x-1 relative text-sm font-medium text-slate-600 transition-all duration-300 hover:text-slate-900 hover:scale-110 dark:text-slate-400 dark:hover:text-slate-100 after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 after:bg-blue-500 after:transition-all after:duration-300 hover:after:w-full"
             >
-              Home
+              <Home className="h-4 w-4 transition-transform duration-300 group-hover:-translate-y-1" />
+              <span>Home</span>
             </Link>
             <Link
               href="/articles"
-              className="relative text-sm font-medium text-slate-600 transition-all duration-300 hover:text-slate-900 hover:scale-110 dark:text-slate-400 dark:hover:text-slate-100 after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 after:bg-blue-500 after:transition-all after:duration-300 hover:after:w-full"
+              className="group flex items-center space-x-1 relative text-sm font-medium text-slate-600 transition-all duration-300 hover:text-slate-900 hover:scale-110 dark:text-slate-400 dark:hover:text-slate-100 after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 after:bg-blue-500 after:transition-all after:duration-300 hover:after:w-full"
             >
-              Articles
+              <FileText className="h-4 w-4 transition-transform duration-300 group-hover:-translate-y-1" />
+              <span>Articles</span>
             </Link>
             <Link
               href="/tags"
-              className="relative text-sm font-medium text-slate-600 transition-all duration-300 hover:text-slate-900 hover:scale-110 dark:text-slate-400 dark:hover:text-slate-100 after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 after:bg-blue-500 after:transition-all after:duration-300 hover:after:w-full"
+              className="group flex items-center space-x-1 relative text-sm font-medium text-slate-600 transition-all duration-300 hover:text-slate-900 hover:scale-110 dark:text-slate-400 dark:hover:text-slate-100 after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 after:bg-blue-500 after:transition-all after:duration-300 hover:after:w-full"
             >
-              Tags
+              <Hash className="h-4 w-4 transition-transform duration-300 group-hover:-translate-y-1" />
+              <span>Tags</span>
             </Link>
             <a
               href="https://github.com/elsh1923/NextJemari"
               target="_blank"
               rel="noopener noreferrer"
-              className="relative text-sm font-medium text-slate-600 transition-all duration-300 hover:text-slate-900 hover:scale-110 dark:text-slate-400 dark:hover:text-slate-100"
+              className="group flex items-center space-x-1 relative text-sm font-medium text-slate-600 transition-all duration-300 hover:text-slate-900 hover:scale-110 dark:text-slate-400 dark:hover:text-slate-100"
             >
-              <Github className="h-5 w-5" />
+              <Github className="h-5 w-5 transition-transform duration-300 group-hover:rotate-12" />
             </a>
           </div>
 
@@ -93,6 +96,12 @@ export function Navigation() {
                     Dashboard
                   </Button>
                 </Link>
+                <Link href={`/u/${session.user.username || session.user.id}`}>
+                  <Button variant="ghost" size="sm" className="flex items-center space-x-2">
+                    <User className="h-4 w-4" />
+                    <span>Profile</span>
+                  </Button>
+                </Link>
                 <Button variant="outline" size="sm" onClick={() => signOut()}>
                   Sign Out
                 </Button>
@@ -126,7 +135,7 @@ export function Navigation() {
 
         {/* Mobile Menu */}
         {mobileMenuOpen && (
-          <div className="border-t border-slate-200 py-4 dark:border-[#1A1A1C] md:hidden">
+          <div className="animate-[slide-in-down_0.3s_ease-out] border-t border-slate-200 py-4 dark:border-[#1A1A1C] md:hidden">
             {/* Mobile Search */}
             <div className="mb-4 px-4">
               <form
@@ -152,24 +161,27 @@ export function Navigation() {
             <div className="space-y-4 px-4">
               <Link
                 href="/"
-                className="block text-sm font-medium text-slate-600 dark:text-slate-400"
+                className="flex items-center space-x-2 text-sm font-medium text-slate-600 dark:text-slate-400"
                 onClick={() => setMobileMenuOpen(false)}
               >
-                Home
+                <Home className="h-4 w-4" />
+                <span>Home</span>
               </Link>
               <Link
                 href="/articles"
-                className="block text-sm font-medium text-slate-600 dark:text-slate-400"
+                className="flex items-center space-x-2 text-sm font-medium text-slate-600 dark:text-slate-400"
                 onClick={() => setMobileMenuOpen(false)}
               >
-                Articles
+                <FileText className="h-4 w-4" />
+                <span>Articles</span>
               </Link>
               <Link
                 href="/tags"
-                className="block text-sm font-medium text-slate-600 dark:text-slate-400"
+                className="flex items-center space-x-2 text-sm font-medium text-slate-600 dark:text-slate-400"
                 onClick={() => setMobileMenuOpen(false)}
               >
-                Tags
+                <Hash className="h-4 w-4" />
+                <span>Tags</span>
               </Link>
               <a
                 href="https://github.com/elsh1923/NextJemari"
@@ -196,6 +208,14 @@ export function Navigation() {
                     onClick={() => setMobileMenuOpen(false)}
                   >
                     Dashboard
+                  </Link>
+                  <Link
+                    href={`/u/${session.user.username || session.user.id}`}
+                    className="flex items-center space-x-2 text-sm font-medium text-slate-600 dark:text-slate-400"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    <User className="h-4 w-4" />
+                    <span>Profile</span>
                   </Link>
                   <button
                     onClick={() => {

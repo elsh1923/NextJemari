@@ -12,13 +12,16 @@ import { CommentForm } from "./CommentForm";
 
 interface CommentItemProps {
   comment: CommentWithAuthor;
+  depth?: number;
 }
 
-export function CommentItem({ comment }: CommentItemProps) {
+export function CommentItem({ comment, depth = 0 }: CommentItemProps) {
   const { data: session } = useSession();
   const [showReply, setShowReply] = useState(false);
   const [replies, setReplies] = useState(comment.replies || []);
   const [deleted, setDeleted] = useState(false);
+  
+  const maxDepth = 3;
 
   const handleDelete = async () => {
     if (!confirm("Are you sure you want to delete this comment?")) return;
@@ -39,6 +42,7 @@ export function CommentItem({ comment }: CommentItemProps) {
   if (deleted) return null;
 
   const canDelete = session?.user?.id === comment.authorId;
+  const canReply = session && depth < maxDepth;
 
   return (
     <div className="border-b border-slate-200 pb-6 last:border-0 dark:border-[#1A1A1C]">
@@ -86,7 +90,7 @@ export function CommentItem({ comment }: CommentItemProps) {
             {comment.body}
           </p>
 
-          {session && (
+          {canReply && (
             <button
               onClick={() => setShowReply(!showReply)}
               className="flex items-center space-x-1 text-sm text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-100"
@@ -108,9 +112,9 @@ export function CommentItem({ comment }: CommentItemProps) {
           )}
 
           {replies.length > 0 && (
-            <div className="mt-4 space-y-4 border-l-2 border-slate-200 pl-4 dark:border-[#1A1A1C]">
+            <div className={`mt-4 space-y-4 ${depth < maxDepth ? 'border-l-2 border-slate-200 pl-4 dark:border-[#1A1A1C]' : ''}`}>
               {replies.map((reply) => (
-                <CommentItem key={reply.id} comment={reply} />
+                <CommentItem key={reply.id} comment={reply} depth={depth + 1} />
               ))}
             </div>
           )}

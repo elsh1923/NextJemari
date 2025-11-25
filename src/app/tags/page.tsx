@@ -1,13 +1,22 @@
 import { getAllTags, getPopularTags } from "@/actions/tags";
 import Link from "next/link";
+import { Tag, TagWithCount } from "@/types";
 
 export const dynamic = 'force-dynamic';
 
 export default async function TagsPage() {
-  const [allTags, popularTags] = await Promise.all([
-    getAllTags(),
-    getPopularTags(20),
-  ]);
+  let allTags: Tag[] = [];
+  let popularTags: TagWithCount[] = [];
+
+  try {
+    [allTags, popularTags] = await Promise.all([
+      getAllTags(),
+      getPopularTags(20),
+    ]);
+  } catch (error) {
+    console.error("Failed to fetch tags:", error);
+    // Fallback to empty arrays is already handled by initialization
+  }
 
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-[#0A0A0C] relative overflow-hidden">

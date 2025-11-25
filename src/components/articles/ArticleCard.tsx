@@ -88,11 +88,11 @@ export function ArticleCard({ article, showDeleteButton = false }: ArticleCardPr
 
             {/* Cover Image */}
             {article.coverImage && (
-              <div className="w-full flex-shrink-0 overflow-hidden rounded-lg bg-slate-100 sm:w-32 dark:bg-[#0A0A0C]">
+              <div className="w-full flex-shrink-0 overflow-hidden rounded-lg bg-slate-100 sm:w-48 dark:bg-[#0A0A0C]">
                 <img
                   src={article.coverImage}
                   alt={article.title}
-                  className="aspect-video h-full w-full object-cover transition-transform duration-500 group-hover:scale-110 sm:aspect-square"
+                  className="aspect-video h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
                 />
               </div>
             )}

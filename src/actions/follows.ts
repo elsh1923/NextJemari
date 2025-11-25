@@ -126,6 +126,7 @@ export async function getFollowers(userId: string, limit: number = 50): Promise<
   username: string;
   avatarUrl: string | null;
   bio: string | null;
+  isFollowing: boolean;
 }>> {
   try {
     const follows = await prisma.follow.findMany({
@@ -146,7 +147,33 @@ export async function getFollowers(userId: string, limit: number = 50): Promise<
       take: limit,
     });
 
-    return follows.map((follow) => follow.follower);
+    const followers = follows.map((follow) => follow.follower);
+    
+    // Check if current user follows them
+    let currentUserId: string | null = null;
+    try { 
+      const user = await requireAuth();
+      currentUserId = user.id;
+    } catch {}
+
+    if (!currentUserId) {
+      return followers.map(u => ({ ...u, isFollowing: false }));
+    }
+
+    const myFollows = await prisma.follow.findMany({
+      where: {
+        followerId: currentUserId,
+        followingId: { in: followers.map(u => u.id) }
+      },
+      select: { followingId: true }
+    });
+
+    const myFollowsSet = new Set(myFollows.map(f => f.followingId));
+
+    return followers.map(u => ({
+      ...u,
+      isFollowing: myFollowsSet.has(u.id)
+    }));
   } catch {
     return [];
   }
@@ -160,6 +187,7 @@ export async function getFollowing(userId: string, limit: number = 50): Promise<
   username: string;
   avatarUrl: string | null;
   bio: string | null;
+  isFollowing: boolean;
 }>> {
   try {
     const follows = await prisma.follow.findMany({
@@ -180,7 +208,33 @@ export async function getFollowing(userId: string, limit: number = 50): Promise<
       take: limit,
     });
 
-    return follows.map((follow) => follow.following);
+    const following = follows.map((follow) => follow.following);
+
+    // Check if current user follows them
+    let currentUserId: string | null = null;
+    try { 
+      const user = await requireAuth();
+      currentUserId = user.id;
+    } catch {}
+
+    if (!currentUserId) {
+      return following.map(u => ({ ...u, isFollowing: false }));
+    }
+
+    const myFollows = await prisma.follow.findMany({
+      where: {
+        followerId: currentUserId,
+        followingId: { in: following.map(u => u.id) }
+      },
+      select: { followingId: true }
+    });
+
+    const myFollowsSet = new Set(myFollows.map(f => f.followingId));
+
+    return following.map(u => ({
+      ...u,
+      isFollowing: myFollowsSet.has(u.id)
+    }));
   } catch {
     return [];
   }

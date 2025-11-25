@@ -5,6 +5,14 @@ import { isValidEmail, isValidUsername } from "./utils";
  * Validation schemas using Zod
  */
 
+// Reserved usernames that cannot be registered
+const RESERVED_USERNAMES = [
+  "admin", "dashboard", "settings", "api", "auth",
+  "search", "tags", "articles", "write", "u",
+  "signin", "signup", "signout", "profile", "about",
+  "help", "terms", "privacy", "contact"
+];
+
 export const registerSchema = z.object({
   email: z
     .string()
@@ -17,6 +25,10 @@ export const registerSchema = z.object({
     .regex(
       /^[a-zA-Z0-9_-]+$/,
       "Username can only contain letters, numbers, underscores, and hyphens"
+    )
+    .refine(
+      (username) => !RESERVED_USERNAMES.includes(username.toLowerCase()),
+      "This username is reserved and cannot be used"
     ),
   password: z
     .string()

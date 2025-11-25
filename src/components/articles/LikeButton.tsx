@@ -53,7 +53,7 @@ export function LikeButton({ articleId, initialCount, initialLiked = false }: Li
             : "text-slate-600 hover:text-red-600 dark:text-slate-500 dark:hover:text-red-400"
         }`}
       >
-        <Heart className={`h-4 w-4 ${liked ? "fill-current" : ""}`} />
+        <Heart className={`h-5 w-5 ${liked ? "fill-current" : ""}`} />
         <span>{count}</span>
       </button>
       {showMessage && (

@@ -3,7 +3,7 @@ import Link from "next/link";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { getUserProfile } from "@/actions/users";
-import { getFollowing } from "@/actions/follows";
+import { getFollowers } from "@/actions/follows";
 import { UserList } from "@/components/users/UserList";
 
 export const dynamic = 'force-dynamic';
@@ -14,7 +14,7 @@ interface PageProps {
   }>;
 }
 
-export default async function FollowingPage({ params }: PageProps) {
+export default async function FollowersPage({ params }: PageProps) {
   const resolvedParams = await params;
   const { username } = resolvedParams;
   const profile = await getUserProfile(username);
@@ -26,7 +26,7 @@ export default async function FollowingPage({ params }: PageProps) {
   const session = await getServerSession(authOptions);
   const currentUserId = session?.user?.id;
 
-  const following = await getFollowing(profile.id);
+  const followers = await getFollowers(profile.id);
 
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-[#0A0A0C]">
@@ -39,12 +39,12 @@ export default async function FollowingPage({ params }: PageProps) {
             ← Back to profile
           </Link>
           <h1 className="mt-4 text-3xl font-bold text-slate-900 dark:text-white">
-            {profile.username} is following
+            {profile.username} is followed by
           </h1>
         </div>
 
         <UserList 
-          users={following} 
+          users={followers} 
           currentUserId={currentUserId}
           showFollowButton={true}
         />
@@ -52,4 +52,3 @@ export default async function FollowingPage({ params }: PageProps) {
     </div>
   );
 }
-

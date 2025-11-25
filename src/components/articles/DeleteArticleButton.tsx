@@ -36,20 +36,20 @@ export function DeleteArticleButton({ slug, authorUsername }: DeleteArticleButto
       // Check if we're on the dashboard
       const isDashboard = typeof window !== 'undefined' && window.location.pathname.includes('/dashboard');
       
-      // Show success message for 1.5 seconds before closing dialog and refreshing
+      // Show success message for 1 second before closing dialog and redirecting
       setTimeout(() => {
         setShowDialog(false);
         
         if (isDashboard) {
-          // On dashboard, reload the page smoothly after dialog closes
-          setTimeout(() => {
-            window.location.reload();
-          }, 300);
+          // On dashboard, refresh to show updated list
+          router.refresh();
         } else {
           // On article page, redirect to user profile
-          window.location.href = `/u/${authorUsername}`;
+          // Use router.push for client-side navigation
+          router.push(`/u/${authorUsername}`);
+          router.refresh(); // Ensure cache is cleared
         }
-      }, 1500);
+      }, 1000);
     } catch (err: any) {
       console.error("Failed to delete article:", err);
       setError(err?.message || "Failed to delete article. Please try again.");

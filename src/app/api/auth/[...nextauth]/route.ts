@@ -63,6 +63,7 @@ export const authOptions: AuthOptions = {
     async session({ session, token }) {
       if (token && session.user) {
         session.user.id = token.id ?? token.sub ?? "";
+        session.user.username = token.username as string | null;
         session.user.role = (token.role as UserRole) ?? ("USER" as UserRole);
       }
       return session;
@@ -70,6 +71,7 @@ export const authOptions: AuthOptions = {
     async jwt({ token, user }) {
       if (user) {
         token.id = user.id;
+        token.username = user.name; // username is stored in name field during authorize
         token.role = (user as any).role ?? ("USER" as UserRole);
       }
       return token;

@@ -6,7 +6,7 @@ import { SessionUser } from "@/types";
 import { ArticleListItem } from "@/types";
 import { Button } from "@/components/ui/Button";
 import { ArticleList } from "@/components/articles/ArticleList";
-import { Plus, FileText, Bookmark, Settings, Users } from "lucide-react";
+import { Plus, FileText, Bookmark, Settings, Users, X } from "lucide-react";
 import { ProfileEditForm } from "@/components/users/ProfileEditForm";
 import { UserProfile } from "@/types";
 import { UserList } from "@/components/users/UserList";
@@ -30,8 +30,14 @@ interface DashboardViewProps {
 }
 
 export function DashboardView({ user, articles, bookmarks, profile, followers = [], following = [], followerCount = 0, followingCount = 0 }: DashboardViewProps) {
-  const [activeTab, setActiveTab] = useState<"articles" | "bookmarks" | "social" | "settings">("articles");
+  const [activeTab, setActiveTab] = useState<"articles" | "drafts" | "bookmarks" | "social" | "settings">("articles");
   const [socialView, setSocialView] = useState<"followers" | "following">("followers");
+  const [showBanner, setShowBanner] = useState(true);
+
+  const publishedArticles = articles.filter(article => article.published);
+  const draftArticles = articles.filter(article => !article.published);
+
+  const needsProfileCompletion = !profile?.bio || profile.bio.trim() === "";
 
   return (
     <div>
@@ -50,11 +56,38 @@ export function DashboardView({ user, articles, bookmarks, profile, followers = 
         </Link>
       </div>
 
+      {needsProfileCompletion && showBanner && (
+        <div className="mb-6 rounded-lg border border-blue-200 bg-blue-50 p-4 dark:border-blue-800 dark:bg-blue-900/20">
+          <div className="flex items-start justify-between">
+            <div className="flex-1">
+              <h3 className="font-semibold text-blue-900 dark:text-blue-200">
+                Complete your profile
+              </h3>
+              <p className="mt-1 text-sm text-blue-700 dark:text-blue-300">
+                Add a bio to tell others about yourself and make your profile stand out.
+              </p>
+              <button
+                onClick={() => setActiveTab("settings")}
+                className="mt-2 text-sm font-medium text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-200"
+              >
+                Go to Settings →
+              </button>
+            </div>
+            <button
+              onClick={() => setShowBanner(false)}
+              className="text-blue-600 hover:text-blue-800 dark:text-blue-400"
+            >
+              <X className="h-5 w-5" />
+            </button>
+          </div>
+        </div>
+      )}
+
       <div className="mb-6 border-b border-slate-200 dark:border-[#1A1A1C]">
-        <nav className="-mb-px flex space-x-8">
+        <nav className="-mb-px flex space-x-8 overflow-x-auto">
           <button
             onClick={() => setActiveTab("articles")}
-            className={`border-b-2 py-4 text-sm font-medium transition-all duration-300 ${
+            className={`whitespace-nowrap border-b-2 py-4 text-sm font-medium transition-all duration-300 ${
               activeTab === "articles"
                 ? "border-blue-500 text-blue-600 dark:text-blue-400"
                 : "border-transparent text-slate-500 hover:border-slate-300 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-300"
@@ -62,12 +95,25 @@ export function DashboardView({ user, articles, bookmarks, profile, followers = 
           >
             <div className="flex items-center space-x-2">
               <FileText className="h-4 w-4 transition-transform duration-300 group-hover:scale-110" />
-              <span>My Articles ({articles.length})</span>
+              <span>Published ({publishedArticles.length})</span>
+            </div>
+          </button>
+          <button
+            onClick={() => setActiveTab("drafts")}
+            className={`whitespace-nowrap border-b-2 py-4 text-sm font-medium transition-all duration-300 ${
+              activeTab === "drafts"
+                ? "border-blue-500 text-blue-600 dark:text-blue-400"
+                : "border-transparent text-slate-500 hover:border-slate-300 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-300"
+            }`}
+          >
+            <div className="flex items-center space-x-2">
+              <FileText className="h-4 w-4 transition-transform duration-300 group-hover:scale-110" />
+              <span>Drafts ({draftArticles.length})</span>
             </div>
           </button>
           <button
             onClick={() => setActiveTab("bookmarks")}
-            className={`border-b-2 py-4 text-sm font-medium transition-all duration-300 ${
+            className={`whitespace-nowrap border-b-2 py-4 text-sm font-medium transition-all duration-300 ${
               activeTab === "bookmarks"
                 ? "border-blue-500 text-blue-600 dark:text-blue-400"
                 : "border-transparent text-slate-500 hover:border-slate-300 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-300"
@@ -80,7 +126,7 @@ export function DashboardView({ user, articles, bookmarks, profile, followers = 
           </button>
           <button
             onClick={() => setActiveTab("social")}
-            className={`border-b-2 py-4 text-sm font-medium transition-all duration-300 ${
+            className={`whitespace-nowrap border-b-2 py-4 text-sm font-medium transition-all duration-300 ${
               activeTab === "social"
                 ? "border-blue-500 text-blue-600 dark:text-blue-400"
                 : "border-transparent text-slate-500 hover:border-slate-300 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-300"
@@ -93,7 +139,7 @@ export function DashboardView({ user, articles, bookmarks, profile, followers = 
           </button>
           <button
             onClick={() => setActiveTab("settings")}
-            className={`border-b-2 py-4 text-sm font-medium transition-all duration-300 ${
+            className={`whitespace-nowrap border-b-2 py-4 text-sm font-medium transition-all duration-300 ${
               activeTab === "settings"
                 ? "border-blue-500 text-blue-600 dark:text-blue-400"
                 : "border-transparent text-slate-500 hover:border-slate-300 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-300"
@@ -109,16 +155,33 @@ export function DashboardView({ user, articles, bookmarks, profile, followers = 
 
       <div>
         {activeTab === "articles" ? (
-          articles.length > 0 ? (
-            <ArticleList articles={articles} showDeleteButton={true} />
+          publishedArticles.length > 0 ? (
+            <ArticleList articles={publishedArticles} showDeleteButton={true} />
           ) : (
             <div className="rounded-xl border border-slate-200 bg-white p-12 text-center dark:border-[#1A1A1C] dark:bg-[#111113]">
               <FileText className="mx-auto h-12 w-12 text-slate-400" />
               <h3 className="mt-4 text-lg font-medium text-slate-900 dark:text-white">
-                No articles yet
+                No published articles
               </h3>
               <p className="mt-2 text-slate-600 dark:text-slate-400">
                 Get started by writing your first article.
+              </p>
+              <Link href="/write" className="mt-4 inline-block">
+                <Button>Write Article</Button>
+              </Link>
+            </div>
+          )
+        ) : activeTab === "drafts" ? (
+          draftArticles.length > 0 ? (
+            <ArticleList articles={draftArticles} showDeleteButton={true} />
+          ) : (
+            <div className="rounded-xl border border-slate-200 bg-white p-12 text-center dark:border-[#1A1A1C] dark:bg-[#111113]">
+              <FileText className="mx-auto h-12 w-12 text-slate-400" />
+              <h3 className="mt-4 text-lg font-medium text-slate-900 dark:text-white">
+                No drafts
+              </h3>
+              <p className="mt-2 text-slate-600 dark:text-slate-400">
+                Start writing an article and save it as a draft.
               </p>
               <Link href="/write" className="mt-4 inline-block">
                 <Button>Write Article</Button>

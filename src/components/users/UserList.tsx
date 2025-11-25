@@ -9,6 +9,7 @@ interface UserListItem {
   username: string;
   avatarUrl: string | null;
   bio: string | null;
+  isFollowing?: boolean;
 }
 
 interface UserListProps {
@@ -65,8 +66,8 @@ export function UserList({ users, currentUserId, showFollowButton = true }: User
           {showFollowButton && currentUserId !== user.id && (
             <FollowButton
               userId={user.id}
-              initialFollowing={false}
-              initialFollowerCount={0}
+              initialFollowing={user.isFollowing || false}
+              initialFollowerCount={0} // We don't display count here, so 0 is fine
             />
           )}
         </div>

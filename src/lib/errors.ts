@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { ZodError } from "zod";
 import { AppError, ValidationError, NotFoundError, UnauthorizedError, ForbiddenError } from "@/types";
 
 /**
@@ -6,6 +7,18 @@ import { AppError, ValidationError, NotFoundError, UnauthorizedError, ForbiddenE
  */
 export function handleError(error: unknown): NextResponse {
   console.error("Error:", error);
+
+  if (error instanceof ZodError) {
+    return NextResponse.json(
+      {
+        success: false,
+        error: "Validation failed",
+        fields: error.flatten().fieldErrors,
+        code: "VALIDATION_ERROR",
+      },
+      { status: 400 }
+    );
+  }
 
   if (error instanceof ValidationError) {
     return NextResponse.json(
