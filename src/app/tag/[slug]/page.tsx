@@ -6,25 +6,28 @@ import { ArticleList } from "@/components/articles/ArticleList";
 export const dynamic = 'force-dynamic';
 
 interface PageProps {
-  params: {
+  params: Promise<{
     slug: string;
-  };
-  searchParams: {
+  }>;
+  searchParams: Promise<{
     page?: string;
-  };
+  }>;
 }
 
 export default async function TagPage({ params, searchParams }: PageProps) {
-  const tag = await getTagBySlug(params.slug);
+  const { slug } = await params;
+  const { page: pageParam } = await searchParams;
+  
+  const tag = await getTagBySlug(slug);
 
   if (!tag) {
     notFound();
   }
 
-  const page = parseInt(searchParams.page || "1");
+  const page = parseInt(pageParam || "1");
   const { articles } = await getArticles({
     published: true,
-    tagSlug: params.slug,
+    tagSlug: slug,
     sortBy: "newest",
     page,
     limit: 20,

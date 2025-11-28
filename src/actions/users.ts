@@ -119,3 +119,51 @@ export async function getCurrentUserProfile(): Promise<UserProfile | null> {
   }
 }
 
+/**
+ * Get popular authors by article count
+ */
+export async function getPopularAuthors(limit: number = 5) {
+  try {
+    const authors = await prisma.user.findMany({
+      where: {
+        articles: {
+          some: {
+            published: true,
+          },
+        },
+      },
+      select: {
+        id: true,
+        username: true,
+        avatarUrl: true,
+        bio: true,
+        _count: {
+          select: {
+            articles: {
+              where: {
+                published: true,
+              },
+            },
+            followers: true,
+          },
+        },
+      },
+      orderBy: {
+        articles: {
+          _count: "desc",
+        },
+      },
+      take: limit,
+    });
+
+    return authors;
+  } catch (error: any) {
+    // Handle database connection errors gracefully
+    if (error?.code === "P1001" || error?.message?.includes("Can't reach database")) {
+      console.error("Database connection error:", error.message);
+      return [];
+    }
+    throw error;
+  }
+}
+

@@ -1,5 +1,6 @@
 import { getArticles } from "@/actions/articles";
 import { getPopularTags } from "@/actions/tags";
+import { getPopularAuthors } from "@/actions/users";
 import { HeroSection } from "@/components/home/HeroSection";
 import { ArticleFeed } from "@/components/home/ArticleFeed";
 import { Sidebar } from "@/components/home/Sidebar";
@@ -14,15 +15,19 @@ export default async function HomePage() {
     limit: 3,
   });
 
-  // Fetch recent articles for feed
-  const { articles: recentArticles } = await getArticles({
+  // Fetch recent articles for feed with pagination
+  const { articles: recentArticles, totalPages, total } = await getArticles({
     published: true,
     sortBy: "newest",
+    page: 1,
     limit: 12,
   });
 
   // Fetch popular tags
   const popularTags = await getPopularTags(10);
+
+  // Fetch popular authors
+  const popularAuthors = await getPopularAuthors(5);
 
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-[#0A0A0C] relative overflow-hidden">
@@ -36,11 +41,11 @@ export default async function HomePage() {
         {/* Main Content Grid */}
         <div className="mt-6 grid grid-cols-1 gap-6 sm:mt-8 lg:mt-12 lg:grid-cols-[1fr_320px] lg:gap-8">
           {/* Article Feed */}
-          <ArticleFeed articles={recentArticles} />
+          <ArticleFeed articles={recentArticles} totalPages={totalPages} total={total} />
 
           {/* Sidebar */}
           <aside className="hidden lg:block">
-            <Sidebar popularTags={popularTags} />
+            <Sidebar popularTags={popularTags} popularAuthors={popularAuthors} />
           </aside>
         </div>
       </main>

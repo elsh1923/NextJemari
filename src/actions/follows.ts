@@ -1,7 +1,7 @@
 "use server";
 
 import prisma from "@/lib/prisma";
-import { requireAuth } from "@/lib/auth";
+import { requireAuth, getCurrentUser } from "@/lib/auth";
 import { NotFoundError, ForbiddenError } from "@/types";
 
 /**
@@ -150,11 +150,8 @@ export async function getFollowers(userId: string, limit: number = 50): Promise<
     const followers = follows.map((follow) => follow.follower);
     
     // Check if current user follows them
-    let currentUserId: string | null = null;
-    try { 
-      const user = await requireAuth();
-      currentUserId = user.id;
-    } catch {}
+    const user = await getCurrentUser();
+    const currentUserId = user?.id;
 
     if (!currentUserId) {
       return followers.map(u => ({ ...u, isFollowing: false }));
@@ -174,7 +171,8 @@ export async function getFollowers(userId: string, limit: number = 50): Promise<
       ...u,
       isFollowing: myFollowsSet.has(u.id)
     }));
-  } catch {
+  } catch (error) {
+    console.error("Error in getFollowers:", error);
     return [];
   }
 }
@@ -211,11 +209,8 @@ export async function getFollowing(userId: string, limit: number = 50): Promise<
     const following = follows.map((follow) => follow.following);
 
     // Check if current user follows them
-    let currentUserId: string | null = null;
-    try { 
-      const user = await requireAuth();
-      currentUserId = user.id;
-    } catch {}
+    const user = await getCurrentUser();
+    const currentUserId = user?.id;
 
     if (!currentUserId) {
       return following.map(u => ({ ...u, isFollowing: false }));
@@ -235,8 +230,8 @@ export async function getFollowing(userId: string, limit: number = 50): Promise<
       ...u,
       isFollowing: myFollowsSet.has(u.id)
     }));
-  } catch {
+  } catch (error) {
+    console.error("Error in getFollowing:", error);
     return [];
   }
 }
-

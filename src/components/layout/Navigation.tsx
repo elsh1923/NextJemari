@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import { Search, Menu, X, Github, Home, FileText, Hash, User } from "lucide-react";
 import { useState } from "react";
 import { useSession, signIn, signOut } from "next-auth/react";
@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/Button";
 
 export function Navigation() {
   const router = useRouter();
+  const pathname = usePathname();
   const { data: session } = useSession();
   const [searchQuery, setSearchQuery] = useState("");
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -18,11 +19,11 @@ export function Navigation() {
       <div className="mx-auto w-full px-4 sm:px-6 lg:px-8 xl:px-12">
         <div className="flex h-16 items-center justify-between">
           {/* Logo */}
-          <Link href="/" className="group/logo flex items-center space-x-2 transition-all duration-500 hover:scale-110 hover:drop-shadow-lg">
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-slate-900 transition-all duration-500 hover:rotate-12 hover:scale-110 hover:shadow-lg dark:bg-white">
-              <span className="text-lg font-bold text-white transition-all duration-300 dark:text-slate-900">N</span>
+          <Link href="/" className="group/logo flex items-center space-x-2 transition-all duration-500 ease-in-out hover:scale-105 hover:drop-shadow-lg">
+            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-slate-900 transition-all duration-500 ease-in-out hover:rotate-12 hover:scale-110 hover:shadow-lg dark:bg-white">
+              <span className="text-lg font-bold text-white transition-all duration-300 ease-in-out dark:text-slate-900">N</span>
             </div>
-            <span className="text-xl font-semibold text-slate-900 transition-all duration-300 dark:text-white">
+            <span className="text-xl font-semibold text-slate-900 transition-all duration-300 ease-in-out dark:text-white">
               Nextjemari
             </span>
           </Link>
@@ -31,67 +32,77 @@ export function Navigation() {
           <div className="hidden items-center space-x-8 md:flex md:ml-16">
             <Link
               href="/"
-              className="group flex items-center space-x-1 relative text-sm font-medium text-slate-600 transition-all duration-300 hover:text-slate-900 hover:scale-110 dark:text-slate-400 dark:hover:text-slate-100 after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 after:bg-blue-500 after:transition-all after:duration-300 hover:after:w-full"
+              className={`group flex items-center space-x-1 relative text-sm font-medium transition-all duration-300 ease-in-out hover:scale-105 after:absolute after:bottom-0 after:left-0 after:h-0.5 after:bg-blue-500 after:transition-all after:duration-300 after:ease-in-out ${
+                pathname === '/' 
+                  ? 'text-slate-900 dark:text-slate-100 after:w-full font-semibold' 
+                  : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 after:w-0 hover:after:w-full'
+              }`}
             >
-              <Home className="h-4 w-4 transition-transform duration-300 group-hover:-translate-y-1" />
+              <Home className="h-4 w-4 transition-transform duration-300 ease-in-out group-hover:-translate-y-1" />
               <span>Home</span>
             </Link>
             <Link
               href="/articles"
-              className="group flex items-center space-x-1 relative text-sm font-medium text-slate-600 transition-all duration-300 hover:text-slate-900 hover:scale-110 dark:text-slate-400 dark:hover:text-slate-100 after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 after:bg-blue-500 after:transition-all after:duration-300 hover:after:w-full"
+              className={`group flex items-center space-x-1 relative text-sm font-medium transition-all duration-300 ease-in-out hover:scale-105 after:absolute after:bottom-0 after:left-0 after:h-0.5 after:bg-blue-500 after:transition-all after:duration-300 after:ease-in-out ${
+                pathname === '/articles' || pathname?.startsWith('/article/') 
+                  ? 'text-slate-900 dark:text-slate-100 after:w-full font-semibold' 
+                  : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 after:w-0 hover:after:w-full'
+              }`}
             >
-              <FileText className="h-4 w-4 transition-transform duration-300 group-hover:-translate-y-1" />
+              <FileText className="h-4 w-4 transition-transform duration-300 ease-in-out group-hover:-translate-y-1" />
               <span>Articles</span>
             </Link>
             <Link
               href="/tags"
-              className="group flex items-center space-x-1 relative text-sm font-medium text-slate-600 transition-all duration-300 hover:text-slate-900 hover:scale-110 dark:text-slate-400 dark:hover:text-slate-100 after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 after:bg-blue-500 after:transition-all after:duration-300 hover:after:w-full"
+              className={`group flex items-center space-x-1 relative text-sm font-medium transition-all duration-300 ease-in-out hover:scale-105 after:absolute after:bottom-0 after:left-0 after:h-0.5 after:bg-blue-500 after:transition-all after:duration-300 after:ease-in-out ${
+                pathname === '/tags' || pathname?.startsWith('/tag/') 
+                  ? 'text-slate-900 dark:text-slate-100 after:w-full font-semibold' 
+                  : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 after:w-0 hover:after:w-full'
+              }`}
             >
-              <Hash className="h-4 w-4 transition-transform duration-300 group-hover:-translate-y-1" />
+              <Hash className="h-4 w-4 transition-transform duration-300 ease-in-out group-hover:-translate-y-1" />
               <span>Tags</span>
             </Link>
             <a
               href="https://github.com/elsh1923/NextJemari"
               target="_blank"
               rel="noopener noreferrer"
-              className="group flex items-center space-x-1 relative text-sm font-medium text-slate-600 transition-all duration-300 hover:text-slate-900 hover:scale-110 dark:text-slate-400 dark:hover:text-slate-100"
+              className="group flex items-center space-x-1 relative text-sm font-medium text-slate-600 transition-all duration-300 ease-in-out hover:text-slate-900 hover:scale-105 dark:text-slate-400 dark:hover:text-slate-100"
             >
-              <Github className="h-5 w-5 transition-transform duration-300 group-hover:rotate-12" />
+              <Github className="h-5 w-5 transition-transform duration-300 ease-in-out group-hover:rotate-12" />
             </a>
           </div>
 
-          {/* Search Button - Always Visible */}
-          <div className="flex items-center">
-            <Link
-              href="/search"
-              className="group flex items-center space-x-2 rounded-lg bg-slate-100 px-3 py-2 text-sm font-medium text-slate-700 transition-all duration-300 hover:bg-slate-200 hover:scale-105 hover:shadow-md dark:bg-[#1A1A1C] dark:text-slate-300 dark:hover:bg-[#2A2A2C]"
-              title="Search articles"
-            >
-              <Search className="h-4 w-4 transition-transform duration-300 group-hover:scale-110" />
-              <span className="hidden sm:inline">Search</span>
-            </Link>
-          </div>
-
-          {/* Search Bar - Desktop */}
+          {/* Search Bar & Button - Desktop */}
           <div className="hidden flex-1 items-center justify-center px-4 lg:flex lg:px-8">
-            <form
-              onSubmit={(e) => {
-                e.preventDefault();
-                if (searchQuery.trim()) {
-                  router.push(`/search?q=${encodeURIComponent(searchQuery.trim())}`);
-                }
-              }}
-              className="group relative w-full max-w-md"
-            >
-              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400 transition-all duration-300 group-focus-within:text-blue-500 group-focus-within:scale-110" />
-              <input
-                type="text"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Search articles..."
-                className="group w-full rounded-lg border border-slate-200 bg-slate-50 py-2 pl-10 pr-4 text-sm placeholder-slate-400 transition-all duration-300 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:scale-105 focus:shadow-lg dark:border-[#1A1A1C] dark:bg-[#111113] dark:text-slate-100 dark:placeholder-slate-500 dark:focus:border-blue-400"
-              />
-            </form>
+            <div className="flex items-center w-full max-w-md">
+              <form
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  if (searchQuery.trim()) {
+                    router.push(`/search?q=${encodeURIComponent(searchQuery.trim())}`);
+                  }
+                }}
+                className="group relative flex-1"
+              >
+                <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400 transition-all duration-300 ease-in-out group-focus-within:text-blue-500 group-focus-within:scale-110" />
+                <input
+                  type="text"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  placeholder="Search articles..."
+                  className="w-full rounded-l-lg rounded-r-none border border-r-0 border-slate-200 bg-slate-50 py-2 pl-10 pr-4 text-sm placeholder-slate-400 transition-all duration-300 ease-in-out focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:z-10 dark:border-[#1A1A1C] dark:bg-[#111113] dark:text-slate-100 dark:placeholder-slate-500 dark:focus:border-blue-400"
+                />
+              </form>
+              
+              <Link
+                href="/search"
+                className="group flex items-center justify-center rounded-r-lg border border-slate-200 bg-slate-100 px-3 py-2 text-slate-700 transition-all duration-300 ease-in-out hover:bg-slate-200 hover:shadow-md dark:border-[#1A1A1C] dark:bg-[#1A1A1C] dark:text-slate-300 dark:hover:bg-[#2A2A2C]"
+                title="Go to search page"
+              >
+                <Search className="h-4 w-4 transition-transform duration-300 ease-in-out group-hover:scale-110" />
+              </Link>
+            </div>
           </div>
 
           {/* Auth Buttons */}
@@ -136,19 +147,19 @@ export function Navigation() {
           <div className="flex items-center space-x-3 md:hidden">
             <Link
               href="/search"
-              className="group flex items-center justify-center rounded-lg bg-slate-100 p-2 transition-all duration-300 hover:bg-slate-200 hover:scale-110 dark:bg-[#1A1A1C] dark:hover:bg-[#2A2A2C]"
+              className="group flex items-center justify-center rounded-lg bg-slate-100 p-2 transition-all duration-300 ease-in-out hover:bg-slate-200 hover:scale-105 dark:bg-[#1A1A1C] dark:hover:bg-[#2A2A2C]"
               title="Search"
             >
-              <Search className="h-5 w-5 text-slate-700 transition-transform duration-300 group-hover:scale-110 dark:text-slate-300" />
+              <Search className="h-5 w-5 text-slate-700 transition-transform duration-300 ease-in-out group-hover:scale-110 dark:text-slate-300" />
             </Link>
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="rounded-lg p-2 transition-colors hover:bg-slate-100 dark:hover:bg-[#1A1A1C]"
+              className="rounded-lg p-2 transition-all duration-300 ease-in-out hover:bg-slate-100 hover:scale-105 dark:hover:bg-[#1A1A1C]"
             >
               {mobileMenuOpen ? (
-                <X className="h-6 w-6 text-slate-900 dark:text-white" />
+                <X className="h-6 w-6 text-slate-900 transition-transform duration-200 ease-in-out dark:text-white" />
               ) : (
-                <Menu className="h-6 w-6 text-slate-900 dark:text-white" />
+                <Menu className="h-6 w-6 text-slate-900 transition-transform duration-200 ease-in-out dark:text-white" />
               )}
             </button>
           </div>
@@ -182,7 +193,11 @@ export function Navigation() {
             <div className="space-y-4 px-4">
               <Link
                 href="/"
-                className="flex items-center space-x-2 text-sm font-medium text-slate-600 dark:text-slate-400"
+                className={`flex items-center space-x-2 text-sm font-medium transition-colors duration-200 ${
+                  pathname === '/' 
+                    ? 'text-slate-900 dark:text-slate-100 font-semibold' 
+                    : 'text-slate-600 dark:text-slate-400'
+                }`}
                 onClick={() => setMobileMenuOpen(false)}
               >
                 <Home className="h-4 w-4" />
@@ -190,7 +205,11 @@ export function Navigation() {
               </Link>
               <Link
                 href="/articles"
-                className="flex items-center space-x-2 text-sm font-medium text-slate-600 dark:text-slate-400"
+                className={`flex items-center space-x-2 text-sm font-medium transition-colors duration-200 ${
+                  pathname === '/articles' || pathname?.startsWith('/article/') 
+                    ? 'text-slate-900 dark:text-slate-100 font-semibold' 
+                    : 'text-slate-600 dark:text-slate-400'
+                }`}
                 onClick={() => setMobileMenuOpen(false)}
               >
                 <FileText className="h-4 w-4" />
@@ -198,7 +217,11 @@ export function Navigation() {
               </Link>
               <Link
                 href="/tags"
-                className="flex items-center space-x-2 text-sm font-medium text-slate-600 dark:text-slate-400"
+                className={`flex items-center space-x-2 text-sm font-medium transition-colors duration-200 ${
+                  pathname === '/tags' || pathname?.startsWith('/tag/') 
+                    ? 'text-slate-900 dark:text-slate-100 font-semibold' 
+                    : 'text-slate-600 dark:text-slate-400'
+                }`}
                 onClick={() => setMobileMenuOpen(false)}
               >
                 <Hash className="h-4 w-4" />
@@ -275,4 +298,3 @@ export function Navigation() {
     </nav>
   );
 }
-
