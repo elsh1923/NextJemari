@@ -29,6 +29,13 @@ export async function createComment(
   // Verify article exists
   const article = await prisma.article.findUnique({
     where: { id: validated.articleId },
+    include: {
+      author: {
+        select: {
+          username: true,
+        },
+      },
+    },
   });
 
   if (!article) {
@@ -63,11 +70,14 @@ export async function createComment(
         select: {
           id: true,
           username: true,
-          avatarUrl: true,
+          image: true,
         },
       },
     },
   });
+
+  const { revalidatePath } = await import("next/cache");
+  revalidatePath(`/u/${article.author.username}/${article.slug}`);
 
   return comment as CommentWithAuthor;
 }
@@ -109,7 +119,7 @@ export async function updateComment(
         select: {
           id: true,
           username: true,
-          avatarUrl: true,
+          image: true,
         },
       },
     },
@@ -159,7 +169,7 @@ export async function getArticleComments(
           select: {
             id: true,
             username: true,
-            avatarUrl: true,
+            image: true,
           },
         },
         replies: {
@@ -168,7 +178,7 @@ export async function getArticleComments(
               select: {
                 id: true,
                 username: true,
-                avatarUrl: true,
+                image: true,
               },
             },
             replies: {
@@ -177,7 +187,7 @@ export async function getArticleComments(
                   select: {
                     id: true,
                     username: true,
-                    avatarUrl: true,
+                    image: true,
                   },
                 },
               },
@@ -220,7 +230,7 @@ export async function getCommentById(
         select: {
           id: true,
           username: true,
-          avatarUrl: true,
+          image: true,
         },
       },
     },

@@ -87,7 +87,7 @@ export async function getBookmarkedArticles(): Promise<ArticleListItem[]> {
               select: {
                 id: true,
                 username: true,
-                avatarUrl: true,
+                image: true,
               },
             },
             tags: {

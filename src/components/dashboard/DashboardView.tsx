@@ -14,8 +14,9 @@ import { UserList } from "@/components/users/UserList";
 interface UserListItem {
   id: string;
   username: string;
-  avatarUrl: string | null;
+  image: string | null;
   bio: string | null;
+  isFollowing: boolean;
 }
 
 interface DashboardViewProps {

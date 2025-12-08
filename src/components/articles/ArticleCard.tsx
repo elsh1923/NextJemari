@@ -48,9 +48,9 @@ export function ArticleCard({ article, showDeleteButton = false, showPublishButt
               <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                 <div className="flex flex-wrap items-center gap-3 text-xs text-slate-500 dark:text-slate-500 sm:gap-4">
                   <div className="flex items-center space-x-1.5">
-                    {article.author.avatarUrl ? (
+                    {article.author.image ? (
                       <Image
-                        src={article.author.avatarUrl}
+                        src={article.author.image}
                         alt={article.author.username}
                         width={20}
                         height={20}

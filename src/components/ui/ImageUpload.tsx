@@ -1,8 +1,10 @@
 "use client";
 
+
 import { useState, useRef } from "react";
 import { Upload, X, Loader2 } from "lucide-react";
 import { Button } from "./Button";
+import { ImageCropper } from "./ImageCropper";
 
 interface ImageUploadProps {
   value?: string;
@@ -26,6 +28,8 @@ export function ImageUpload({
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [preview, setPreview] = useState<string | null>(value || null);
+  const [cropImage, setCropImage] = useState<string | null>(null);
+  const [isCropping, setIsCropping] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -46,18 +50,33 @@ export function ImageUpload({
     }
 
     setError(null);
-    setUploading(true);
 
-    // Create preview
+    // Read file for cropping
     const reader = new FileReader();
     reader.onloadend = () => {
-      setPreview(reader.result as string);
+      setCropImage(reader.result as string);
+      setIsCropping(true);
     };
     reader.readAsDataURL(file);
+    
+    // Reset file input so same file can be selected again if needed
+    if (fileInputRef.current) {
+        fileInputRef.current.value = "";
+    }
+  };
+
+  const handleCropComplete = async (croppedBlob: Blob) => {
+    setIsCropping(false);
+    setCropImage(null);
+    setUploading(true);
+    
+    // Create preview immediate from blob
+    const previewUrl = URL.createObjectURL(croppedBlob);
+    setPreview(previewUrl);
 
     try {
       const formData = new FormData();
-      formData.append("file", file);
+      formData.append("file", croppedBlob, "image.jpg");
       formData.append("folder", folder);
       formData.append("type", type);
 
@@ -73,16 +92,23 @@ export function ImageUpload({
       }
 
       onChange(data.data.url);
+      // Clean up blob url
+      URL.revokeObjectURL(previewUrl);
       setError(null);
     } catch (err: any) {
       setError(err.message || "Failed to upload image");
       setPreview(value || null);
+      URL.revokeObjectURL(previewUrl);
     } finally {
       setUploading(false);
-      // Reset file input
-      if (fileInputRef.current) {
+    }
+  };
+
+  const handleCropCancel = () => {
+    setIsCropping(false);
+    setCropImage(null);
+    if (fileInputRef.current) {
         fileInputRef.current.value = "";
-      }
     }
   };
 
@@ -101,8 +127,8 @@ export function ImageUpload({
               <img
                 src={preview}
                 alt="Preview"
-                className={`h-full w-full object-cover ${
-                  type === "avatar" ? "aspect-square" : "aspect-video"
+                className={`w-full object-cover ${
+                  type === "avatar" ? "aspect-square h-full" : "h-auto"
                 }`}
               />
               {!disabled && (
@@ -167,6 +193,16 @@ export function ImageUpload({
           </div>
         )}
       </div>
+
+      {cropImage && (
+        <ImageCropper
+          open={isCropping}
+          imageSrc={cropImage}
+          onCropComplete={handleCropComplete}
+          onCancel={handleCropCancel}
+          aspect={type === "avatar" ? 1 : 16 / 9}
+        />
+      )}
     </div>
   );
 }

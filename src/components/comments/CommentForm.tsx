@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { createComment } from "@/actions/comments";
 import { CommentWithAuthor } from "@/types";
@@ -14,6 +15,7 @@ interface CommentFormProps {
 }
 
 export function CommentForm({ articleId, parentId, onCommentAdded, onCancel }: CommentFormProps) {
+  const router = useRouter();
   const { data: session } = useSession();
   const [body, setBody] = useState("");
   const [loading, setLoading] = useState(false);
@@ -38,6 +40,7 @@ export function CommentForm({ articleId, parentId, onCommentAdded, onCancel }: C
         parentId,
       });
       onCommentAdded(comment);
+      router.refresh(); // Refresh server components to update counts
       setBody("");
     } catch (error: any) {
       if (error?.message?.includes("Unauthorized") || error?.message?.includes("login")) {

@@ -6,7 +6,7 @@ export interface User {
   email: string;
   username: string;
   bio?: string | null;
-  avatarUrl?: string | null;
+  image?: string | null;
   role: UserRole;
   createdAt: Date;
   updatedAt: Date;
@@ -43,7 +43,7 @@ export interface ArticleWithRelations extends Article {
   author: {
     id: string;
     username: string;
-    avatarUrl?: string | null;
+    image?: string | null;
   };
   tags: Array<{
     tag: {
@@ -76,7 +76,7 @@ export interface ArticleListItem {
   author: {
     id: string;
     username: string;
-    avatarUrl?: string | null;
+    image?: string | null;
   };
   tags: Array<{
     tag: {
@@ -106,7 +106,7 @@ export interface CommentWithAuthor extends Comment {
   author: {
     id: string;
     username: string;
-    avatarUrl?: string | null;
+    image?: string | null;
   };
   replies?: CommentWithAuthor[];
 }
@@ -167,7 +167,7 @@ export interface UpdateCommentInput {
 
 export interface UpdateProfileInput {
   bio?: string;
-  avatarUrl?: string;
+  image?: string;
 }
 
 // Search Types
@@ -210,7 +210,7 @@ export interface SessionUser {
   name?: string | null;
   email?: string | null;
   username?: string | null;
-  role?: UserRole;
+  role?: UserRole | string;
 }
 
 // Error Types

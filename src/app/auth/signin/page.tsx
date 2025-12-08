@@ -6,9 +6,11 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Button } from "@/components/ui/Button";
 import { Eye, EyeOff } from "lucide-react";
+import { useToast } from "@/components/ui/Toast";
 
 export default function SignInPage() {
   const router = useRouter();
+  const { addToast } = useToast();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -30,8 +32,12 @@ export default function SignInPage() {
       if (result?.error) {
         setError("Invalid email or password");
       } else {
-        router.push("/dashboard");
-        router.refresh();
+        addToast("Sign in successful!", "success");
+        // Slight delay to allow toast to be seen before redirect
+        setTimeout(() => {
+          router.push("/dashboard");
+          router.refresh();
+        }, 1000);
       }
     } catch (err) {
       setError("An error occurred. Please try again.");

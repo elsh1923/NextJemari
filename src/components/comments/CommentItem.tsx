@@ -47,9 +47,9 @@ export function CommentItem({ comment, depth = 0 }: CommentItemProps) {
   return (
     <div className="border-b border-slate-200 pb-6 last:border-0 dark:border-[#1A1A1C]">
       <div className="flex gap-4">
-        {comment.author.avatarUrl ? (
+        {comment.author.image ? (
           <Image
-            src={comment.author.avatarUrl}
+            src={comment.author.image}
             alt={comment.author.username}
             width={40}
             height={40}
@@ -72,7 +72,10 @@ export function CommentItem({ comment, depth = 0 }: CommentItemProps) {
               >
                 {comment.author.username}
               </Link>
-              <span className="text-sm text-slate-500 dark:text-slate-500">
+              <span 
+                className="text-sm text-slate-500 dark:text-slate-500"
+                suppressHydrationWarning
+              >
                 {formatRelativeTime(comment.createdAt)}
               </span>
             </div>

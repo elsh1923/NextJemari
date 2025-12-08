@@ -7,7 +7,7 @@ import { FollowButton } from "./FollowButton";
 interface UserListItem {
   id: string;
   username: string;
-  avatarUrl: string | null;
+  image: string | null;
   bio: string | null;
   isFollowing?: boolean;
 }
@@ -40,9 +40,9 @@ export function UserList({ users, currentUserId, showFollowButton = true }: User
             className="flex flex-1 items-center space-x-4"
           >
             <div className="relative h-12 w-12 overflow-hidden rounded-full border-2 border-slate-200 transition-all duration-300 group-hover:border-blue-500 dark:border-[#1A1A1C]">
-              {user.avatarUrl ? (
+              {user.image ? (
                 <img
-                  src={user.avatarUrl}
+                  src={user.image}
                   alt={user.username}
                   className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-110"
                 />

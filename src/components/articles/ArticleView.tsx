@@ -53,9 +53,9 @@ export function ArticleView({ article, initialLiked = false, initialBookmarked =
               href={`/u/${article.author.username}`}
               className="flex items-center space-x-2 sm:space-x-3"
             >
-              {article.author.avatarUrl ? (
+              {article.author.image ? (
                 <Image
-                  src={article.author.avatarUrl}
+                  src={article.author.image}
                   alt={article.author.username}
                   width={40}
                   height={40}

@@ -1,99 +1,194 @@
-import { getServerSession } from "next-auth/next";
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
-import { UnauthorizedError, ForbiddenError } from "@/types";
-import { UserRole } from "@prisma/client";
+import { NextAuthOptions } from "next-auth";
+import CredentialsProvider from "next-auth/providers/credentials";
+import GithubProvider from "next-auth/providers/github";
+import { PrismaAdapter } from "@auth/prisma-adapter";
+import prisma from "@/lib/prisma";
+import bcrypt from "bcryptjs";
+import { UnauthorizedError } from "@/types";
 
-/**
- * Get the current session user
- */
-export async function getCurrentUser() {
-  try {
-    const session = await getServerSession(authOptions);
-    return session?.user || null;
-  } catch (error: any) {
-    // Handle JWT decryption errors
-    if (error?.message?.includes("decryption") || error?.message?.includes("JWT")) {
-      console.warn("Session error:", error.message);
-      return null;
-    }
-    throw error;
+
+// Extend the built-in session types
+declare module "next-auth" {
+  interface Session {
+    user: {
+      id: string;
+      email: string;
+      username: string;
+      role: string;
+      name?: string | null;
+      image?: string | null;
+    };
+  }
+
+  interface User {
+    id: string;
+    email: string;
+    username: string;
+    role: string;
+    image?: string | null;
   }
 }
 
+declare module "next-auth/jwt" {
+  interface JWT {
+    id: string;
+    username: string;
+    role: string;
+  }
+}
+
+
+export const authOptions: NextAuthOptions = {
+  adapter: PrismaAdapter(prisma) as any,
+  providers: [
+    GithubProvider({
+      clientId: process.env.GITHUB_ID || "",
+      clientSecret: process.env.GITHUB_SECRET || "",
+      profile(profile) {
+        return {
+          id: profile.id.toString(),
+          name: profile.name || profile.login,
+          email: profile.email,
+          image: profile.avatar_url,
+          username: profile.login,
+          role: "USER",
+        };
+      },
+    }),
+    CredentialsProvider({
+      name: "credentials",
+      credentials: {
+
+        email: { label: "Email", type: "email" },
+        password: { label: "Password", type: "password" },
+      },
+      async authorize(credentials) {
+        if (!credentials?.email || !credentials?.password) {
+          throw new Error("Invalid credentials");
+        }
+
+        const user = await prisma.user.findUnique({
+          where: { email: credentials.email },
+        });
+
+        if (!user || !user.passwordHash) {
+          throw new Error("Invalid credentials");
+        }
+
+        const isPasswordValid = await bcrypt.compare(
+          credentials.password,
+          user.passwordHash
+        );
+
+        if (!isPasswordValid) {
+          throw new Error("Invalid credentials");
+        }
+
+        return {
+          id: user.id,
+          email: user.email,
+          username: user.username,
+          role: user.role,
+          image: user.image,
+        };
+      },
+    }),
+  ],
+  session: {
+    strategy: "jwt",
+  },
+  callbacks: {
+    async jwt({ token, user }) {
+      if (user) {
+        token.id = user.id;
+        token.username = user.username;
+        token.role = user.role;
+      }
+      return token;
+    },
+    async session({ session, token }) {
+      if (session.user) {
+        session.user.id = token.id;
+        session.user.username = token.username;
+        session.user.role = token.role;
+      }
+      return session;
+    },
+  },
+  pages: {
+    signIn: "/auth/signin",
+  },
+};
+
 /**
- * Require authentication - throws if not authenticated
+ * Get the current authenticated user from the session
+ * Throws UnauthorizedError if not authenticated
  */
 export async function requireAuth() {
-  const user = await getCurrentUser();
-  if (!user) {
+  const { getServerSession } = await import("next-auth");
+  const session = await getServerSession(authOptions);
+
+  if (!session?.user) {
     throw new UnauthorizedError("You must be logged in to perform this action");
   }
-  return user;
+
+  return session.user;
 }
 
 /**
- * Require specific role - throws if user doesn't have required role
+ * Get the current session (may be null)
  */
-export async function requireRole(requiredRole: UserRole) {
-  const user = await requireAuth();
-  const roleHierarchy: Record<UserRole, number> = {
-    USER: 1,
-    MODERATOR: 2,
-    ADMIN: 3,
-  };
-
-  const userRoleLevel = roleHierarchy[user.role || "USER"];
-  const requiredRoleLevel = roleHierarchy[requiredRole];
-
-  if (userRoleLevel < requiredRoleLevel) {
-    throw new ForbiddenError(
-      `This action requires ${requiredRole} role or higher`
-    );
-  }
-
-  return user;
+export async function getSession() {
+  const { getServerSession } = await import("next-auth");
+  return await getServerSession(authOptions);
 }
 
 /**
- * Check if user is admin
+ * Get current user from session (may be null)
  */
-export async function isAdmin() {
-  try {
-    const user = await requireAuth();
-    return user.role === "ADMIN";
-  } catch {
-    return false;
-  }
+export async function getCurrentUser() {
+  const session = await getSession();
+  return session?.user || null;
 }
 
 /**
- * Check if user is moderator or admin
- */
-export async function isModerator() {
-  try {
-    const user = await requireAuth();
-    return user.role === "MODERATOR" || user.role === "ADMIN";
-  } catch {
-    return false;
-  }
-}
-
-/**
- * Check if user owns a resource
- */
-export function isOwner(userId: string, resourceUserId: string): boolean {
-  return userId === resourceUserId;
-}
-
-/**
- * Check if user can edit a resource (owner or admin/moderator)
+ * Check if the current user can edit a resource
+ * @param userId - The ID of the current user
+ * @param resourceOwnerId - The ID of the resource owner
+ * @returns true if the user can edit the resource
  */
 export async function canEdit(
   userId: string,
-  resourceUserId: string
+  resourceOwnerId: string
 ): Promise<boolean> {
-  if (isOwner(userId, resourceUserId)) return true;
-  const moderator = await isModerator();
-  return moderator;
+  // User can edit their own resources
+  if (userId === resourceOwnerId) {
+    return true;
+  }
+
+  // Check if user is admin or moderator
+  const user = await prisma.user.findUnique({
+    where: { id: userId },
+    select: { role: true },
+  });
+
+  return user?.role === "ADMIN" || user?.role === "MODERATOR";
 }
 
+/**
+ * Check if the current user is an admin
+ */
+export async function requireAdmin() {
+  const user = await requireAuth();
+
+  const dbUser = await prisma.user.findUnique({
+    where: { id: user.id },
+    select: { role: true },
+  });
+
+  if (dbUser?.role !== "ADMIN") {
+    throw new UnauthorizedError("Admin access required");
+  }
+
+  return user;
+}

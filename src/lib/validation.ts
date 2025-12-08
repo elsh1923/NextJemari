@@ -82,7 +82,7 @@ export const updateCommentSchema = z.object({
 
 export const updateProfileSchema = z.object({
   bio: z.string().max(500, "Bio must be at most 500 characters").optional(),
-  avatarUrl: z.string().url("Invalid image URL").optional().or(z.literal("")),
+  image: z.string().url("Invalid image URL").optional().or(z.literal("")),
 });
 
 export const searchSchema = z.object({

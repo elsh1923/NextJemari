@@ -106,7 +106,7 @@ export async function searchArticles(
             select: {
               id: true,
               username: true,
-              avatarUrl: true,
+              image: true,
             },
           },
           tags: {

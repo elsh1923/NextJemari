@@ -6,9 +6,11 @@ import Link from "next/link";
 import { Button } from "@/components/ui/Button";
 import { Eye, EyeOff } from "lucide-react";
 import { signIn } from "next-auth/react";
+import { useToast } from "@/components/ui/Toast";
 
 export default function SignUpPage() {
   const router = useRouter();
+  const { addToast } = useToast();
   const [formData, setFormData] = useState({
     email: "",
     username: "",
@@ -60,8 +62,11 @@ export default function SignUpPage() {
         });
 
         if (result?.ok) {
-          router.push("/dashboard");
-          router.refresh();
+          addToast("Registration successful! Redirecting...", "success");
+          setTimeout(() => {
+            router.push("/dashboard");
+            router.refresh();
+          }, 1500);
         } else {
           // Fallback if auto-login fails
           router.push("/auth/signin?registered=true");

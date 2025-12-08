@@ -1,0 +1,25 @@
+﻿src/actions/auth.ts(44,5): error TS2322: Type '{ email: string; username: string; passwordHash: string; }' is not assignable to type '(Without<userCreateInput, userUncheckedCreateInput> & userUncheckedCreateInput) | (Without<...> & userCreateInput)'.
+  Type '{ email: string; username: string; passwordHash: string; }' is not assignable to type 'Without<userUncheckedCreateInput, userCreateInput> & userCreateInput'.
+    Type '{ email: string; username: string; passwordHash: string; }' is missing the following properties from type 'userCreateInput': id, updatedAt
+src/actions/bookmarks.ts(91,12): error TS2352: Conversion of type '{ id: string; body: string; createdAt: Date; updatedAt: Date; title: string; description: string | null; coverImage: string | null; published: boolean; slug: string; authorId: string; readingTime: number | null; viewCount: number; }[]' to type 'ArticleListItem[]' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.
+  Type '{ id: string; body: string; createdAt: Date; updatedAt: Date; title: string; description: string | null; coverImage: string | null; published: boolean; slug: string; authorId: string; readingTime: number | null; viewCount: number; }' is missing the following properties from type 'ArticleListItem': author, tags, _count
+src/actions/users.ts(114,24): error TS2339: Property 'image' does not exist on type '{ avatarUrl?: string | undefined; bio?: string | undefined; }'.
+src/app/dashboard/page.tsx(51,11): error TS2322: Type '{ id: string; email: string; username: string; role: string; name?: string | null | undefined; image?: string | null | undefined; }' is not assignable to type 'SessionUser'.
+  Types of property 'role' are incompatible.
+    Type 'string' is not assignable to type 'UserRole | undefined'.
+src/app/dashboard/page.tsx(55,11): error TS2322: Type 'never[] | { id: string; username: string; image: string | null; bio: string | null; isFollowing: boolean; }[]' is not assignable to type 'UserListItem[] | undefined'.
+  Type '{ id: string; username: string; image: string | null; bio: string | null; isFollowing: boolean; }[]' is not assignable to type 'UserListItem[]'.
+    Property 'avatarUrl' is missing in type '{ id: string; username: string; image: string | null; bio: string | null; isFollowing: boolean; }' but required in type 'UserListItem'.
+src/app/dashboard/page.tsx(56,11): error TS2322: Type 'never[] | { id: string; username: string; image: string | null; bio: string | null; isFollowing: boolean; }[]' is not assignable to type 'UserListItem[] | undefined'.
+  Type '{ id: string; username: string; image: string | null; bio: string | null; isFollowing: boolean; }[]' is not assignable to type 'UserListItem[]'.
+    Property 'avatarUrl' is missing in type '{ id: string; username: string; image: string | null; bio: string | null; isFollowing: boolean; }' but required in type 'UserListItem'.
+src/app/page.tsx(48,48): error TS2322: Type '{ id: string; username: string; image: string | null; bio: string | null; _count: { articles: number; followers: number; }; }[]' is not assignable to type 'PopularAuthor[]'.
+  Property 'avatarUrl' is missing in type '{ id: string; username: string; image: string | null; bio: string | null; _count: { articles: number; followers: number; }; }' but required in type 'PopularAuthor'.
+src/app/u/[username]/followers/page.tsx(47,11): error TS2322: Type '{ id: string; username: string; image: string | null; bio: string | null; isFollowing: boolean; }[]' is not assignable to type 'UserListItem[]'.
+  Property 'avatarUrl' is missing in type '{ id: string; username: string; image: string | null; bio: string | null; isFollowing: boolean; }' but required in type 'UserListItem'.
+src/app/u/[username]/following/page.tsx(47,11): error TS2322: Type '{ id: string; username: string; image: string | null; bio: string | null; isFollowing: boolean; }[]' is not assignable to type 'UserListItem[]'.
+  Property 'avatarUrl' is missing in type '{ id: string; username: string; image: string | null; bio: string | null; isFollowing: boolean; }' but required in type 'UserListItem'.
+src/app/u/[username]/page.tsx(49,11): error TS2322: Type '{ id: string; username: string; image: string | null; bio: string | null; isFollowing: boolean; }[]' is not assignable to type 'UserListItem[]'.
+  Property 'avatarUrl' is missing in type '{ id: string; username: string; image: string | null; bio: string | null; isFollowing: boolean; }' but required in type 'UserListItem'.
+src/app/u/[username]/page.tsx(50,11): error TS2322: Type '{ id: string; username: string; image: string | null; bio: string | null; isFollowing: boolean; }[]' is not assignable to type 'UserListItem[]'.
+  Property 'avatarUrl' is missing in type '{ id: string; username: string; image: string | null; bio: string | null; isFollowing: boolean; }' but required in type 'UserListItem'.

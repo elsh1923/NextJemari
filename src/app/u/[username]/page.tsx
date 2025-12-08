@@ -3,7 +3,7 @@ import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { getUserProfile } from "@/actions/users";
 import { getUserArticles } from "@/actions/articles";
-import { isFollowing } from "@/actions/follows";
+import { isFollowing, getFollowers, getFollowing } from "@/actions/follows";
 import { UserProfileView } from "@/components/users/UserProfileView";
 import { ArticleList } from "@/components/articles/ArticleList";
 
@@ -27,11 +27,13 @@ export default async function UserProfilePage({ params }: PageProps) {
     notFound();
   }
 
-  const [articles, isUserFollowing] = await Promise.all([
+  const [articles, isUserFollowing, followers, following] = await Promise.all([
     getUserArticles(username, currentUserId === profile.id),
     currentUserId && currentUserId !== profile.id
       ? isFollowing(profile.id)
       : Promise.resolve(false),
+    getFollowers(profile.id),
+    getFollowing(profile.id),
   ]);
 
   return (
@@ -43,14 +45,10 @@ export default async function UserProfilePage({ params }: PageProps) {
           initialFollowing={isUserFollowing}
           followerCount={profile._count?.followers || 0}
           followingCount={profile._count?.following || 0}
+          articles={articles}
+          followers={followers}
+          following={following}
         />
-
-        <div>
-          <h2 className="mb-6 text-2xl font-bold text-slate-900 dark:text-white">
-            Articles
-          </h2>
-          <ArticleList articles={articles} />
-        </div>
       </div>
     </div>
   );

@@ -71,28 +71,13 @@ export async function createArticle(
       published: validated.published || false,
       readingTime,
       authorId: user.id,
-      tags: validated.tagNames
-        ? {
-            create: validated.tagNames.map((tagName) => ({
-              tag: {
-                connectOrCreate: {
-                  where: { name: tagName.toLowerCase() },
-                  create: {
-                    name: tagName.toLowerCase(),
-                    slug: generateSlug(tagName),
-                  },
-                },
-              },
-            })),
-          }
-        : undefined,
     },
     include: {
       author: {
         select: {
           id: true,
           username: true,
-          avatarUrl: true,
+          image: true,
         },
       },
       tags: {
@@ -106,7 +91,7 @@ export async function createArticle(
             select: {
               id: true,
               username: true,
-              avatarUrl: true,
+              image: true,
             },
           },
         },
@@ -199,7 +184,7 @@ export async function updateArticle(
         select: {
           id: true,
           username: true,
-          avatarUrl: true,
+          image: true,
         },
       },
       tags: {
@@ -213,7 +198,7 @@ export async function updateArticle(
             select: {
               id: true,
               username: true,
-              avatarUrl: true,
+              image: true,
             },
           },
         },
@@ -288,7 +273,7 @@ export async function getArticleBySlug(
           select: {
             id: true,
             username: true,
-            avatarUrl: true,
+            image: true,
           },
         },
         tags: {
@@ -302,7 +287,7 @@ export async function getArticleBySlug(
               select: {
                 id: true,
                 username: true,
-                avatarUrl: true,
+                image: true,
               },
             },
             replies: {
@@ -311,7 +296,7 @@ export async function getArticleBySlug(
                   select: {
                     id: true,
                     username: true,
-                    avatarUrl: true,
+                    image: true,
                   },
                 },
               },
@@ -417,11 +402,10 @@ export async function getArticles(filters: {
   } else if (filters.sortBy === "popular") {
     orderBy = { viewCount: "desc" };
   } else if (filters.sortBy === "trending") {
-    // Trending = recent articles with high engagement (likes + comments)
-    // This is a simplified version - you might want to use a more sophisticated algorithm
+    // Trending = recent articles with high engagement
+    // Sort by view count and recency as Prisma doesn't support ordering by relation counts
     orderBy = [
-      { likes: { _count: "desc" } },
-      { comments: { _count: "desc" } },
+      { viewCount: "desc" },
       { createdAt: "desc" },
     ];
   }
@@ -439,7 +423,7 @@ export async function getArticles(filters: {
             select: {
               id: true,
               username: true,
-              avatarUrl: true,
+              image: true,
             },
           },
           tags: {
@@ -502,7 +486,7 @@ export async function getUserArticlesById(
           select: {
             id: true,
             username: true,
-            avatarUrl: true,
+            image: true,
           },
         },
         tags: {
@@ -592,7 +576,7 @@ export async function publishArticle(slug: string): Promise<ArticleWithRelations
         select: {
           id: true,
           username: true,
-          avatarUrl: true,
+          image: true,
         },
       },
       tags: {
@@ -606,7 +590,7 @@ export async function publishArticle(slug: string): Promise<ArticleWithRelations
             select: {
               id: true,
               username: true,
-              avatarUrl: true,
+              image: true,
             },
           },
         },

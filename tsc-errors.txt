@@ -1,0 +1,101 @@
+﻿src/actions/articles.ts(4,38): error TS2307: Cannot find module '@/lib/auth' or its corresponding type declarations.
+src/actions/articles.ts(74,7): error TS2353: Object literal may only specify known properties, and 'tags' does not exist in type '(Without<ArticleCreateInput, ArticleUncheckedCreateInput> & ArticleUncheckedCreateInput) | (Without<...> & ArticleCreateInput)'.
+src/actions/articles.ts(91,7): error TS2353: Object literal may only specify known properties, and 'author' does not exist in type 'ArticleInclude<DefaultArgs>'.
+src/actions/articles.ts(198,7): error TS2353: Object literal may only specify known properties, and 'author' does not exist in type 'ArticleInclude<DefaultArgs>'.
+src/actions/articles.ts(334,13): error TS2561: Object literal may only specify known properties, but 'comments' does not exist in type 'ArticleCountOutputTypeSelect<DefaultArgs>'. Did you mean to write 'Comment'?
+src/actions/articles.ts(451,15): error TS2561: Object literal may only specify known properties, but 'comments' does not exist in type 'ArticleCountOutputTypeSelect<DefaultArgs>'. Did you mean to write 'Comment'?
+src/actions/articles.ts(461,17): error TS2352: Conversion of type '{ id: string; createdAt: Date; updatedAt: Date; title: string; body: string; description: string | null; coverImage: string | null; published: boolean; slug: string; authorId: string; readingTime: number | null; viewCount: number; }[]' to type 'ArticleListItem[]' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.
+  Type '{ id: string; createdAt: Date; updatedAt: Date; title: string; body: string; description: string | null; coverImage: string | null; published: boolean; slug: string; authorId: string; readingTime: number | null; viewCount: number; }' is missing the following properties from type 'ArticleListItem': author, tags, _count
+src/actions/articles.ts(514,13): error TS2561: Object literal may only specify known properties, but 'comments' does not exist in type 'ArticleCountOutputTypeSelect<DefaultArgs>'. Did you mean to write 'Comment'?
+src/actions/articles.ts(521,12): error TS2352: Conversion of type '{ id: string; createdAt: Date; updatedAt: Date; title: string; body: string; description: string | null; coverImage: string | null; published: boolean; slug: string; authorId: string; readingTime: number | null; viewCount: number; }[]' to type 'ArticleListItem[]' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.
+  Type '{ id: string; createdAt: Date; updatedAt: Date; title: string; body: string; description: string | null; coverImage: string | null; published: boolean; slug: string; authorId: string; readingTime: number | null; viewCount: number; }' is missing the following properties from type 'ArticleListItem': author, tags, _count
+src/actions/articles.ts(590,7): error TS2353: Object literal may only specify known properties, and 'author' does not exist in type 'ArticleInclude<DefaultArgs>'.
+src/actions/auth.ts(44,5): error TS2322: Type '{ email: string; username: string; passwordHash: string; }' is not assignable to type '(Without<userCreateInput, userUncheckedCreateInput> & userUncheckedCreateInput) | (Without<...> & userCreateInput)'.
+  Type '{ email: string; username: string; passwordHash: string; }' is not assignable to type 'Without<userUncheckedCreateInput, userCreateInput> & userCreateInput'.
+    Type '{ email: string; username: string; passwordHash: string; }' is missing the following properties from type 'userCreateInput': id, updatedAt
+src/actions/bookmarks.ts(4,29): error TS2307: Cannot find module '@/lib/auth' or its corresponding type declarations.
+src/actions/bookmarks.ts(45,7): error TS2322: Type '{ userId: any; articleId: string; }' is not assignable to type '(Without<BookmarkCreateInput, BookmarkUncheckedCreateInput> & BookmarkUncheckedCreateInput) | (Without<...> & BookmarkCreateInput)'.
+  Type '{ userId: any; articleId: string; }' is not assignable to type 'Without<BookmarkCreateInput, BookmarkUncheckedCreateInput> & BookmarkUncheckedCreateInput'.
+    Property 'id' is missing in type '{ userId: any; articleId: string; }' but required in type 'BookmarkUncheckedCreateInput'.
+src/actions/bookmarks.ts(84,9): error TS2561: Object literal may only specify known properties, but 'article' does not exist in type 'BookmarkInclude<DefaultArgs>'. Did you mean to write 'Article'?
+src/actions/bookmarks.ts(112,49): error TS2551: Property 'article' does not exist on type '{ id: string; createdAt: Date; articleId: string; userId: string; }'. Did you mean 'articleId'?
+src/actions/comments.ts(4,38): error TS2307: Cannot find module '@/lib/auth' or its corresponding type declarations.
+src/actions/comments.ts(55,5): error TS2322: Type '{ body: string; articleId: string; authorId: any; parentId: string | null; }' is not assignable to type '(Without<CommentCreateInput, CommentUncheckedCreateInput> & CommentUncheckedCreateInput) | (Without<...> & CommentCreateInput)'.
+  Type '{ body: string; articleId: string; authorId: any; parentId: string | null; }' is not assignable to type 'Without<CommentCreateInput, CommentUncheckedCreateInput> & CommentUncheckedCreateInput'.
+    Type '{ body: string; articleId: string; authorId: any; parentId: string | null; }' is missing the following properties from type 'CommentUncheckedCreateInput': id, updatedAt
+src/actions/comments.ts(62,7): error TS2353: Object literal may only specify known properties, and 'author' does not exist in type 'CommentInclude<DefaultArgs>'.
+src/actions/comments.ts(108,7): error TS2353: Object literal may only specify known properties, and 'author' does not exist in type 'CommentInclude<DefaultArgs>'.
+src/actions/comments.ts(158,9): error TS2353: Object literal may only specify known properties, and 'author' does not exist in type 'CommentInclude<DefaultArgs>'.
+src/actions/comments.ts(219,7): error TS2353: Object literal may only specify known properties, and 'author' does not exist in type 'CommentInclude<DefaultArgs>'.
+src/actions/follows.ts(4,45): error TS2307: Cannot find module '@/lib/auth' or its corresponding type declarations.
+src/actions/follows.ts(51,7): error TS2322: Type '{ followerId: any; followingId: string; }' is not assignable to type '(Without<FollowCreateInput, FollowUncheckedCreateInput> & FollowUncheckedCreateInput) | (Without<...> & FollowCreateInput)'.
+  Type '{ followerId: any; followingId: string; }' is not assignable to type 'Without<FollowCreateInput, FollowUncheckedCreateInput> & FollowUncheckedCreateInput'.
+    Property 'id' is missing in type '{ followerId: any; followingId: string; }' but required in type 'FollowUncheckedCreateInput'.
+src/actions/follows.ts(135,9): error TS2353: Object literal may only specify known properties, and 'follower' does not exist in type 'FollowInclude<DefaultArgs>'.
+src/actions/follows.ts(150,54): error TS2551: Property 'follower' does not exist on type '{ id: string; createdAt: Date; followerId: string; followingId: string; }'. Did you mean 'followerId'?
+src/actions/follows.ts(194,9): error TS2353: Object literal may only specify known properties, and 'following' does not exist in type 'FollowInclude<DefaultArgs>'.
+src/actions/follows.ts(209,54): error TS2551: Property 'following' does not exist on type '{ id: string; createdAt: Date; followerId: string; followingId: string; }'. Did you mean 'followingId'?
+src/actions/likes.ts(4,29): error TS2307: Cannot find module '@/lib/auth' or its corresponding type declarations.
+src/actions/likes.ts(45,7): error TS2322: Type '{ userId: any; articleId: string; }' is not assignable to type '(Without<LikeCreateInput, LikeUncheckedCreateInput> & LikeUncheckedCreateInput) | (Without<...> & LikeCreateInput)'.
+  Type '{ userId: any; articleId: string; }' is not assignable to type 'Without<LikeCreateInput, LikeUncheckedCreateInput> & LikeUncheckedCreateInput'.
+    Property 'id' is missing in type '{ userId: any; articleId: string; }' but required in type 'LikeUncheckedCreateInput'.
+src/actions/newsletter.ts(29,7): error TS2322: Type '{ email: string; }' is not assignable to type '(Without<SubscriberCreateInput, SubscriberUncheckedCreateInput> & SubscriberUncheckedCreateInput) | (Without<...> & SubscriberCreateInput)'.
+  Type '{ email: string; }' is not assignable to type 'Without<SubscriberUncheckedCreateInput, SubscriberCreateInput> & SubscriberCreateInput'.
+    Property 'id' is missing in type '{ email: string; }' but required in type 'SubscriberCreateInput'.
+src/actions/reports.ts(4,29): error TS2307: Cannot find module '@/lib/auth' or its corresponding type declarations.
+src/actions/search.ts(119,15): error TS2561: Object literal may only specify known properties, but 'comments' does not exist in type 'ArticleCountOutputTypeSelect<DefaultArgs>'. Did you mean to write 'Comment'?
+src/actions/search.ts(129,17): error TS2352: Conversion of type '{ id: string; createdAt: Date; updatedAt: Date; title: string; body: string; description: string | null; coverImage: string | null; published: boolean; slug: string; authorId: string; readingTime: number | null; viewCount: number; }[]' to type 'ArticleListItem[]' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.
+  Type '{ id: string; createdAt: Date; updatedAt: Date; title: string; body: string; description: string | null; coverImage: string | null; published: boolean; slug: string; authorId: string; readingTime: number | null; viewCount: number; }' is missing the following properties from type 'ArticleListItem': author, tags, _count
+src/actions/search.ts(173,11): error TS2353: Object literal may only specify known properties, and 'articles' does not exist in type 'TagCountOutputTypeSelect<DefaultArgs>'.
+src/actions/search.ts(178,7): error TS2353: Object literal may only specify known properties, and 'articles' does not exist in type 'TagOrderByWithRelationInput | TagOrderByWithRelationInput[]'.
+src/actions/search.ts(185,35): error TS2339: Property '_count' does not exist on type '{ id: string; name: string; createdAt: Date; slug: string; }'.
+src/actions/search.ts(195,7): error TS2353: Object literal may only specify known properties, and 'tags' does not exist in type 'ArticleInclude<DefaultArgs>'.
+src/actions/search.ts(208,33): error TS2339: Property 'tags' does not exist on type '{ id: string; createdAt: Date; updatedAt: Date; title: string; body: string; description: string | null; coverImage: string | null; published: boolean; slug: string; authorId: string; readingTime: number | null; viewCount: number; }'.
+src/actions/search.ts(208,43): error TS7006: Parameter 'at' implicitly has an 'any' type.
+src/actions/search.ts(222,7): error TS2353: Object literal may only specify known properties, and 'tags' does not exist in type 'ArticleWhereInput'.
+src/actions/search.ts(231,7): error TS2353: Object literal may only specify known properties, and 'tags' does not exist in type 'ArticleInclude<DefaultArgs>'.
+src/actions/search.ts(243,7): error TS2339: Property 'tags' does not exist on type '{ id: string; createdAt: Date; updatedAt: Date; title: string; body: string; description: string | null; coverImage: string | null; published: boolean; slug: string; authorId: string; readingTime: number | null; viewCount: number; }'.
+src/actions/search.ts(243,21): error TS7006: Parameter 'at' implicitly has an 'any' type.
+src/actions/tags.ts(37,13): error TS2353: Object literal may only specify known properties, and 'articles' does not exist in type 'TagCountOutputTypeSelect<DefaultArgs>'.
+src/actions/tags.ts(72,13): error TS2353: Object literal may only specify known properties, and 'articles' does not exist in type 'TagCountOutputTypeSelect<DefaultArgs>'.
+src/actions/tags.ts(77,9): error TS2353: Object literal may only specify known properties, and 'articles' does not exist in type 'TagOrderByWithRelationInput | TagOrderByWithRelationInput[]'.
+src/actions/tags.ts(84,37): error TS2339: Property '_count' does not exist on type '{ id: string; name: string; createdAt: Date; slug: string; }'.
+src/actions/tags.ts(108,5): error TS2322: Type '{ name: string; slug: string; }' is not assignable to type '(Without<TagCreateInput, TagUncheckedCreateInput> & TagUncheckedCreateInput) | (Without<TagUncheckedCreateInput, TagCreateInput> & TagCreateInput)'.
+  Type '{ name: string; slug: string; }' is not assignable to type 'Without<TagUncheckedCreateInput, TagCreateInput> & TagCreateInput'.
+    Property 'id' is missing in type '{ name: string; slug: string; }' but required in type 'TagCreateInput'.
+src/actions/tags.ts(122,7): error TS2353: Object literal may only specify known properties, and 'tags' does not exist in type 'ArticleInclude<DefaultArgs>'.
+src/actions/tags.ts(134,18): error TS2339: Property 'tags' does not exist on type '{ id: string; createdAt: Date; updatedAt: Date; title: string; body: string; description: string | null; coverImage: string | null; published: boolean; slug: string; authorId: string; readingTime: number | null; viewCount: number; }'.
+src/actions/tags.ts(134,28): error TS7006: Parameter 'at' implicitly has an 'any' type.
+src/actions/users.ts(4,29): error TS2307: Cannot find module '@/lib/auth' or its corresponding type declarations.
+src/actions/users.ts(24,11): error TS2561: Object literal may only specify known properties, but 'articles' does not exist in type 'UserCountOutputTypeSelect<DefaultArgs>'. Did you mean to write 'Article'?
+src/actions/users.ts(46,15): error TS2339: Property '_count' does not exist on type '{ username: string; id: string; email: string; name: string | null; emailVerified: boolean | null; image: string | null; createdAt: Date; updatedAt: Date; bio: string | null; role: UserRole; passwordHash: string | null; }'.
+src/actions/users.ts(69,11): error TS2561: Object literal may only specify known properties, but 'articles' does not exist in type 'UserCountOutputTypeSelect<DefaultArgs>'. Did you mean to write 'Article'?
+src/actions/users.ts(91,15): error TS2339: Property '_count' does not exist on type '{ username: string; id: string; email: string; name: string | null; emailVerified: boolean | null; image: string | null; createdAt: Date; updatedAt: Date; bio: string | null; role: UserRole; passwordHash: string | null; }'.
+src/actions/users.ts(114,7): error TS2353: Object literal may only specify known properties, and 'avatarUrl' does not exist in type '(Without<userUpdateInput, userUncheckedUpdateInput> & userUncheckedUpdateInput) | (Without<...> & userUpdateInput)'.
+src/actions/users.ts(126,11): error TS2561: Object literal may only specify known properties, but 'articles' does not exist in type 'UserCountOutputTypeSelect<DefaultArgs>'. Did you mean to write 'Article'?
+src/actions/users.ts(146,18): error TS2339: Property '_count' does not exist on type '{ username: string; id: string; email: string; name: string | null; emailVerified: boolean | null; image: string | null; createdAt: Date; updatedAt: Date; bio: string | null; role: UserRole; passwordHash: string | null; }'.
+src/actions/users.ts(172,9): error TS2561: Object literal may only specify known properties, but 'articles' does not exist in type 'userWhereInput'. Did you mean to write 'Article'?
+src/actions/users.ts(185,13): error TS2561: Object literal may only specify known properties, but 'articles' does not exist in type 'UserCountOutputTypeSelect<DefaultArgs>'. Did you mean to write 'Article'?
+src/actions/users.ts(195,9): error TS2353: Object literal may only specify known properties, and 'articles' does not exist in type 'userOrderByWithRelationInput | userOrderByWithRelationInput[]'.
+src/app/api/_middleware/protect.ts(3,10): error TS2459: Module '"../auth/[...nextauth]/route"' declares 'authOptions' locally, but it is not exported.
+src/app/api/articles/route.ts(4,29): error TS2307: Cannot find module '@/lib/auth' or its corresponding type declarations.
+src/app/api/auth/[...nextauth]/route.ts(1,29): error TS2307: Cannot find module '@/lib/auth' or its corresponding type declarations.
+src/app/api/upload/route.ts(3,29): error TS2307: Cannot find module '@/lib/auth' or its corresponding type declarations.
+src/app/dashboard/page.tsx(3,10): error TS2459: Module '"@/app/api/auth/[...nextauth]/route"' declares 'authOptions' locally, but it is not exported.
+src/app/page.tsx(48,48): error TS2322: Type '{ username: string; id: string; email: string; name: string | null; emailVerified: boolean | null; image: string | null; createdAt: Date; updatedAt: Date; bio: string | null; role: UserRole; passwordHash: string | null; }[]' is not assignable to type 'PopularAuthor[]'.
+  Type '{ username: string; id: string; email: string; name: string | null; emailVerified: boolean | null; image: string | null; createdAt: Date; updatedAt: Date; bio: string | null; role: UserRole; passwordHash: string | null; }' is missing the following properties from type 'PopularAuthor': avatarUrl, _count
+src/app/u/[username]/[slug]/page.tsx(3,10): error TS2459: Module '"@/app/api/auth/[...nextauth]/route"' declares 'authOptions' locally, but it is not exported.
+src/app/u/[username]/followers/page.tsx(4,10): error TS2459: Module '"@/app/api/auth/[...nextauth]/route"' declares 'authOptions' locally, but it is not exported.
+src/app/u/[username]/following/page.tsx(4,10): error TS2459: Module '"@/app/api/auth/[...nextauth]/route"' declares 'authOptions' locally, but it is not exported.
+src/app/u/[username]/page.tsx(3,10): error TS2459: Module '"@/app/api/auth/[...nextauth]/route"' declares 'authOptions' locally, but it is not exported.
+src/app/write/[slug]/page.tsx(3,10): error TS2459: Module '"@/app/api/auth/[...nextauth]/route"' declares 'authOptions' locally, but it is not exported.
+src/app/write/page.tsx(3,10): error TS2459: Module '"@/app/api/auth/[...nextauth]/route"' declares 'authOptions' locally, but it is not exported.
+src/components/comments/CommentItem.tsx(44,36): error TS2339: Property 'id' does not exist on type '{ name?: string | null | undefined; email?: string | null | undefined; image?: string | null | undefined; }'.
+src/components/layout/Navigation.tsx(122,35): error TS18048: 'session.user' is possibly 'undefined'.
+src/components/layout/Navigation.tsx(122,48): error TS2339: Property 'username' does not exist on type '{ name?: string | null | undefined; email?: string | null | undefined; image?: string | null | undefined; }'.
+src/components/layout/Navigation.tsx(122,60): error TS18048: 'session.user' is possibly 'undefined'.
+src/components/layout/Navigation.tsx(122,73): error TS2339: Property 'id' does not exist on type '{ name?: string | null | undefined; email?: string | null | undefined; image?: string | null | undefined; }'.
+src/components/layout/Navigation.tsx(257,33): error TS18048: 'session.user' is possibly 'undefined'.
+src/components/layout/Navigation.tsx(257,46): error TS2339: Property 'username' does not exist on type '{ name?: string | null | undefined; email?: string | null | undefined; image?: string | null | undefined; }'.
+src/components/layout/Navigation.tsx(257,58): error TS18048: 'session.user' is possibly 'undefined'.
+src/components/layout/Navigation.tsx(257,71): error TS2339: Property 'id' does not exist on type '{ name?: string | null | undefined; email?: string | null | undefined; image?: string | null | undefined; }'.

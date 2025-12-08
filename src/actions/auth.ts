@@ -42,9 +42,11 @@ export async function register(input: {
   // Create user
   const user = await prisma.user.create({
     data: {
+      id: crypto.randomUUID(),
       email: validated.email,
       username: validated.username,
       passwordHash,
+      updatedAt: new Date(),
     },
   });
 

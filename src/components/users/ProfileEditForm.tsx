@@ -18,7 +18,7 @@ export function ProfileEditForm({ profile, onSuccess }: ProfileEditFormProps) {
   const { update: updateSession } = useSession();
   const [formData, setFormData] = useState({
     bio: profile.bio || "",
-    avatarUrl: profile.avatarUrl || "",
+    image: profile.image || "",
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -62,7 +62,7 @@ export function ProfileEditForm({ profile, onSuccess }: ProfileEditFormProps) {
         throw new Error(data.error || "Upload failed");
       }
 
-      setFormData(prev => ({ ...prev, avatarUrl: data.data.url }));
+      setFormData(prev => ({ ...prev, image: data.data.url }));
     } catch (err: any) {
       setError(err.message || "Failed to upload image");
     } finally {
@@ -132,9 +132,9 @@ export function ProfileEditForm({ profile, onSuccess }: ProfileEditFormProps) {
         <div className="flex flex-col items-center gap-6 sm:flex-row sm:items-start">
           <div className="relative group/avatar cursor-pointer" onClick={() => fileInputRef.current?.click()}>
             <div className="relative h-32 w-32 overflow-hidden rounded-full border-4 border-slate-200 transition-all duration-300 group-hover/avatar:border-blue-500 group-hover/avatar:shadow-lg dark:border-[#1A1A1C]">
-              {formData.avatarUrl ? (
+              {formData.image ? (
                 <img
-                  src={formData.avatarUrl}
+                  src={formData.image}
                   alt="Profile"
                   className="h-full w-full object-cover transition-transform duration-300 group-hover/avatar:scale-110"
                 />
@@ -218,7 +218,7 @@ export function ProfileEditForm({ profile, onSuccess }: ProfileEditFormProps) {
             onClick={() => {
               setFormData({
                 bio: profile.bio || "",
-                avatarUrl: profile.avatarUrl || "",
+                image: profile.image || "",
               });
               setError("");
               setSuccess(false);

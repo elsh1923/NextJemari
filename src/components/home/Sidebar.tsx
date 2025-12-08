@@ -9,7 +9,7 @@ import { subscribeToNewsletter } from "@/actions/newsletter";
 interface PopularAuthor {
   id: string;
   username: string;
-  avatarUrl: string | null;
+  image: string | null;
   bio: string | null;
   _count: {
     articles: number;
@@ -129,9 +129,9 @@ export function Sidebar({ popularTags, popularAuthors = [] }: SidebarProps) {
                 style={{ animation: `slide-in-left 0.4s ease-out ${index * 0.1}s forwards`, opacity: 0 }}
               >
                 <div className="relative h-10 w-10 flex-shrink-0 overflow-hidden rounded-full bg-gradient-to-br from-blue-500 to-indigo-500 transition-all duration-300 ease-in-out group-hover:scale-110 group-hover:shadow-lg">
-                  {author.avatarUrl ? (
+                  {author.image ? (
                     <img 
-                      src={author.avatarUrl} 
+                      src={author.image} 
                       alt={author.username}
                       className="h-full w-full object-cover"
                     />

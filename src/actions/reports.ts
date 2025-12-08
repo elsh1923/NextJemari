@@ -3,6 +3,7 @@
 import prisma from "@/lib/prisma";
 import { requireAuth } from "@/lib/auth";
 import { z } from "zod";
+import { randomBytes } from "crypto";
 
 const reportSchema = z.object({
   articleId: z.string(),
@@ -17,9 +18,10 @@ export async function reportArticle(articleId: string, reason: string) {
 
     await prisma.report.create({
       data: {
+        id: randomBytes(16).toString("hex"),
         articleId: validated.articleId,
         reason: validated.reason,
-        reporterId: user.id,
+        reporterId: (user as any).id,
       },
     });
 

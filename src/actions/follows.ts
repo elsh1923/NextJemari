@@ -124,30 +124,30 @@ export async function getFollowingCount(userId: string): Promise<number> {
 export async function getFollowers(userId: string, limit: number = 50): Promise<Array<{
   id: string;
   username: string;
-  avatarUrl: string | null;
+  image: string | null;
   bio: string | null;
   isFollowing: boolean;
 }>> {
   try {
     const follows = await prisma.follow.findMany({
       where: { followingId: userId },
-      include: {
-        follower: {
-          select: {
-            id: true,
-            username: true,
-            avatarUrl: true,
-            bio: true,
-          },
-        },
-      },
       orderBy: {
         createdAt: "desc",
       },
       take: limit,
     });
 
-    const followers = follows.map((follow) => follow.follower);
+    // Get follower user details
+    const followerIds = follows.map(f => f.followerId);
+    const followers = await prisma.user.findMany({
+      where: { id: { in: followerIds } },
+      select: {
+        id: true,
+        username: true,
+        image: true,
+        bio: true,
+      },
+    });
     
     // Check if current user follows them
     const user = await getCurrentUser();
@@ -183,30 +183,30 @@ export async function getFollowers(userId: string, limit: number = 50): Promise<
 export async function getFollowing(userId: string, limit: number = 50): Promise<Array<{
   id: string;
   username: string;
-  avatarUrl: string | null;
+  image: string | null;
   bio: string | null;
   isFollowing: boolean;
 }>> {
   try {
     const follows = await prisma.follow.findMany({
       where: { followerId: userId },
-      include: {
-        following: {
-          select: {
-            id: true,
-            username: true,
-            avatarUrl: true,
-            bio: true,
-          },
-        },
-      },
       orderBy: {
         createdAt: "desc",
       },
       take: limit,
     });
 
-    const following = follows.map((follow) => follow.following);
+    // Get following user details
+    const followingIds = follows.map(f => f.followingId);
+    const following = await prisma.user.findMany({
+      where: { id: { in: followingIds } },
+      select: {
+        id: true,
+        username: true,
+        image: true,
+        bio: true,
+      },
+    });
 
     // Check if current user follows them
     const user = await getCurrentUser();

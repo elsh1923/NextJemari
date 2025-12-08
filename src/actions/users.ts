@@ -15,7 +15,7 @@ export async function getUserProfile(username: string): Promise<UserProfile | nu
       id: true,
       username: true,
       bio: true,
-      avatarUrl: true,
+      image: true,
       role: true,
       createdAt: true,
       updatedAt: true,
@@ -32,7 +32,38 @@ export async function getUserProfile(username: string): Promise<UserProfile | nu
     },
   });
 
-  return user as UserProfile | null;
+  if (!user) return null;
+
+  // Manually fetch counts to ensure accuracy
+  const [followerCount, followingCount, articleStats] = await Promise.all([
+    prisma.follow.count({ where: { followingId: user.id } }),
+    prisma.follow.count({ where: { followerId: user.id } }),
+    prisma.article.findMany({
+      where: { authorId: user.id },
+      select: {
+        _count: {
+          select: {
+            comments: true,
+            likes: true,
+          },
+        },
+      },
+    }),
+  ]);
+
+  const totalCommentsReceived = articleStats.reduce((acc, curr) => acc + curr._count.comments, 0);
+  const totalLikesReceived = articleStats.reduce((acc, curr) => acc + curr._count.likes, 0);
+
+  return {
+    ...user,
+    _count: {
+      ...user._count,
+      followers: followerCount,
+      following: followingCount,
+      comments: totalCommentsReceived,
+      likes: totalLikesReceived,
+    },
+  } as UserProfile;
 }
 
 /**
@@ -45,7 +76,7 @@ export async function getUserProfileById(userId: string): Promise<UserProfile | 
       id: true,
       username: true,
       bio: true,
-      avatarUrl: true,
+      image: true,
       role: true,
       createdAt: true,
       updatedAt: true,
@@ -62,7 +93,38 @@ export async function getUserProfileById(userId: string): Promise<UserProfile | 
     },
   });
 
-  return user as UserProfile | null;
+  if (!user) return null;
+
+  // Manually fetch counts to ensure accuracy
+  const [followerCount, followingCount, articleStats] = await Promise.all([
+    prisma.follow.count({ where: { followingId: user.id } }),
+    prisma.follow.count({ where: { followerId: user.id } }),
+    prisma.article.findMany({
+      where: { authorId: user.id },
+      select: {
+        _count: {
+          select: {
+            comments: true,
+            likes: true,
+          },
+        },
+      },
+    }),
+  ]);
+
+  const totalCommentsReceived = articleStats.reduce((acc, curr) => acc + curr._count.comments, 0);
+  const totalLikesReceived = articleStats.reduce((acc, curr) => acc + curr._count.likes, 0);
+
+  return {
+    ...user,
+    _count: {
+      ...user._count,
+      followers: followerCount,
+      following: followingCount,
+      comments: totalCommentsReceived,
+      likes: totalLikesReceived,
+    },
+  } as UserProfile;
 }
 
 /**
@@ -81,13 +143,13 @@ export async function updateProfile(
     where: { id: user.id },
     data: {
       bio: validated.bio,
-      avatarUrl: validated.avatarUrl || null,
+      image: validated.image || null,
     },
     select: {
       id: true,
       username: true,
       bio: true,
-      avatarUrl: true,
+      image: true,
       role: true,
       createdAt: true,
       updatedAt: true,
@@ -104,7 +166,20 @@ export async function updateProfile(
     },
   });
 
-  return updated as UserProfile;
+  // Manually fetch counts to ensure accuracy
+  const [followerCount, followingCount] = await Promise.all([
+    prisma.follow.count({ where: { followingId: updated.id } }),
+    prisma.follow.count({ where: { followerId: updated.id } }),
+  ]);
+
+  return {
+    ...updated,
+    _count: {
+      ...updated._count,
+      followers: followerCount,
+      following: followingCount,
+    },
+  } as UserProfile;
 }
 
 /**
@@ -135,7 +210,7 @@ export async function getPopularAuthors(limit: number = 5) {
       select: {
         id: true,
         username: true,
-        avatarUrl: true,
+        image: true,
         bio: true,
         _count: {
           select: {
