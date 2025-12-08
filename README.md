@@ -50,17 +50,20 @@ A professional, open-source Next.js knowledge hub where users can write, share, 
 ## 🚦 Quick Start
 
 1. **Install dependencies:**
+
    ```bash
    npm install
    ```
 
 2. **Set up environment variables:**
+
    ```bash
    cp .env.example .env
    # Edit .env with your database URL and secrets
    ```
 
 3. **Run database migrations:**
+
    ```bash
    npm run prisma:migrate
    npm run prisma:generate
@@ -77,24 +80,70 @@ See [SETUP.md](./SETUP.md) for detailed setup instructions.
 
 ```
 nextjemari/
-├── prisma/              # Database schema and migrations
+├── prisma/                  # Database schema and migrations
+│   └── schema.prisma        # Prisma schema definition
+├── public/                  # Static assets (images, icons)
 ├── src/
-│   ├── actions/         # Server Actions
-│   ├── app/
-│   │   ├── api/         # API Routes
-│   │   └── ...          # App Router pages
-│   ├── lib/             # Utilities and helpers
-│   └── types/           # TypeScript types
-└── ...
+│   ├── actions/             # Server Actions (11 modules)
+│   │   ├── articles.ts      # Article CRUD operations
+│   │   ├── auth.ts          # Authentication (register, login)
+│   │   ├── bookmarks.ts     # Bookmark management
+│   │   ├── comments.ts      # Comment operations
+│   │   ├── follows.ts       # Follow/unfollow users
+│   │   ├── likes.ts         # Like/unlike articles
+│   │   ├── newsletter.ts    # Newsletter subscriptions
+│   │   ├── reports.ts       # Content reporting
+│   │   ├── search.ts        # Full-text search
+│   │   ├── tags.ts          # Tag management
+│   │   └── users.ts         # User profile operations
+│   ├── app/                 # Next.js App Router
+│   │   ├── api/             # API routes (REST endpoints)
+│   │   ├── auth/            # Authentication pages
+│   │   ├── dashboard/       # User dashboard
+│   │   ├── article/         # Article view/edit pages
+│   │   ├── search/          # Search page
+│   │   ├── tag/[slug]/      # Tag-filtered articles
+│   │   ├── u/[username]/    # User profiles & articles
+│   │   ├── write/           # Article editor
+│   │   ├── layout.tsx       # Root layout
+│   │   ├── page.tsx         # Homepage
+│   │   └── globals.css      # Global styles
+│   ├── components/          # React components
+│   │   ├── articles/        # Article cards, lists, editor
+│   │   ├── auth/            # Login/register forms
+│   │   ├── comments/        # Comment section
+│   │   ├── dashboard/       # Dashboard views
+│   │   ├── home/            # Homepage sections
+│   │   ├── interactions/    # Like/bookmark buttons
+│   │   ├── layout/          # Header, footer, navigation
+│   │   ├── mdx/             # MDX rendering
+│   │   ├── search/          # Search components
+│   │   ├── tags/            # Tag components
+│   │   ├── ui/              # Reusable UI primitives
+│   │   └── users/           # User cards, profiles
+│   ├── lib/                 # Utilities and helpers
+│   │   ├── auth.ts          # NextAuth configuration
+│   │   ├── cloudinary.ts    # Image upload
+│   │   ├── mdx.ts           # MDX processing
+│   │   ├── prisma.ts        # Database client
+│   │   ├── utils.ts         # Helper functions
+│   │   └── validation.ts    # Zod schemas
+│   └── types/               # TypeScript type definitions
+│       └── index.ts         # Shared types
+├── package.json             # Dependencies & scripts
+├── tsconfig.json            # TypeScript config
+└── tailwind.config.ts       # Tailwind CSS config
 ```
 
 ## 🔌 API Endpoints
 
 ### Authentication
+
 - `POST /api/auth/register` - Register new user
 - `POST /api/auth/[...nextauth]` - NextAuth endpoints
 
 ### Articles
+
 - `GET /api/articles` - List articles
 - `POST /api/articles` - Create article
 - `GET /api/articles/[slug]` - Get article
@@ -102,22 +151,26 @@ nextjemari/
 - `DELETE /api/articles/[slug]` - Delete article
 
 ### Comments
+
 - `GET /api/comments?articleId=xxx` - Get comments
 - `POST /api/comments` - Create comment
 - `PUT /api/comments/[id]` - Update comment
 - `DELETE /api/comments/[id]` - Delete comment
 
 ### Likes & Bookmarks
+
 - `POST /api/likes` - Toggle like
 - `GET /api/likes?articleId=xxx` - Get like status
 - `POST /api/bookmarks` - Toggle bookmark
 - `GET /api/bookmarks` - Get bookmarks
 
 ### Search & Tags
+
 - `GET /api/search` - Search articles
 - `GET /api/tags` - Get tags
 
 ### Users
+
 - `GET /api/users/[username]` - Get user profile
 - `GET /api/users/me` - Get current user
 - `PUT /api/users/me` - Update profile
@@ -160,6 +213,7 @@ All server actions are available in `src/actions/`:
 This project is open-source and available under the [MIT License](./LICENSE).
 
 You are free to:
+
 - ✅ Use the software for any purpose
 - ✅ Modify the software
 - ✅ Distribute the software
